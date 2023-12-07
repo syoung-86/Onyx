@@ -27,18 +27,6 @@ export const initDatabase = () => {
 db.exec([{sql: 'PRAGMA foreign_keys = ON;', args: []}], false, () =>
     console.log('Foreign keys turned on'),
 );
-
-    console.log('init db');
-    console.log('init db');
-    console.log('init db');
-    console.log('init db');
-    console.log('init db');
-    console.log('init db');
-    console.log('init db');
-    console.log('init db');
-    console.log('init db');
-    console.log('init db');
-
     db.transaction(tx => {
         tx.executeSql(
             'CREATE TABLE IF NOT EXISTS todotoday (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, completed BOOLEAN, date TEXT)',
