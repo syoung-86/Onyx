@@ -42,10 +42,9 @@ const App = () => {
       try {
         console.log('Setting up channels and scheduling notification...');
         await setupChannels();
-        scheduleNotification('todoChannel', 'todo title', 'todo body');
-        console.log('Notification scheduled successfully!');
+        console.log('Notification channels setup  successfully!');
       } catch (error) {
-        console.error('Error setting up channels and scheduling notification:', error);
+        console.error('Error setting up channels:', error);
       }
     })();
         initDatabase();

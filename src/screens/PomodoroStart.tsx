@@ -28,7 +28,7 @@ import scheduleNotification, { cancelNotification } from '../LocalNotifaction';
 function PomodoroStart() {
     const [pomoNotifId, setPomoNotifId] = useState('');
     const [breakNotifId, setBreakNotifId] = useState('');
-    const [timer, setTimer] = useState(3); // Initial time in seconds (25 minutes)
+    const [timer, setTimer] = useState(60 * 25); // Initial time in seconds (25 minutes)
     const [isRunning, setIsRunning] = useState(false);
     const [isBreak, setIsBreak] = useState(false);
     const [selectedTask, setSelectedTask] = useState('');
@@ -97,20 +97,61 @@ function PomodoroStart() {
         });
         setTaskProgress(updatedTaskProgress);
     }, [pomodorosData]);
-    useEffect(() => {
-        let interval: NodeJS.Timeout;
 
-        if (isRunning && timer > 0) {
-            interval = setInterval(() => {
-                setTimer(prevTimer => prevTimer - 1);
-            }, 1000);
-        } else if (timer === 0) {
-            setIsBreak(prevIsBreak => !prevIsBreak);
-            setTimer(isBreak ? 3: 3 ); // Switch between work and break (25 minutes or 5 minutes)
-        }
+const parseDateStringToDate = (dateString: string): Date => {
+  const dateComponents = dateString.split(/[\s,/:]+/);
 
-        return () => clearInterval(interval);
-    }, [isRunning, timer, isBreak]);
+  let hours = parseInt(dateComponents[3]);
+  if (dateComponents[6] && dateComponents[6].toUpperCase() === 'PM') {
+    hours = (hours % 12) + 12;
+  }
+
+  return new Date(
+    Date.UTC(
+      parseInt(dateComponents[2]), // Year
+      parseInt(dateComponents[0]) - 1, // Month (0-based)
+      parseInt(dateComponents[1]), // Day
+      hours, // Adjusted hours
+      parseInt(dateComponents[4]), // Minutes
+      parseInt(dateComponents[5]) || 0, // Seconds
+      parseInt(dateComponents[6]) || 0 // Milliseconds
+    )
+  );
+};
+const calculateRemainingTime = (startTime: Date, duration: number) => {
+    const currentTime = parseDateStringToDate(new Date().toLocaleString());
+    const elapsedTime = Math.floor((currentTime.getTime() - startTime.getTime()) / 1000);
+    const remainingTime = Math.max(duration - elapsedTime, 0);
+    return remainingTime;
+};
+useEffect(() => {
+  const latestPomodoro = pomodorosData[pomodorosData.length - 1];
+  if (latestPomodoro) {
+    const startTime = parseDateStringToDate(latestPomodoro.date);
+    const remainingTime = calculateRemainingTime(startTime, 1500);
+    if (remainingTime > 0) {
+      setIsBreak(!isBreak);
+      setTimer(remainingTime);
+      setIsRunning(true);
+    } else {
+      setIsRunning(false);
+      setIsBreak(false);
+    }
+  }
+}, [pomodorosData]);
+
+// Second useEffect for handling the timer interval
+useEffect(() => {
+  let interval: NodeJS.Timeout;
+
+  if (isRunning && timer > 0) {
+    interval = setInterval(() => {
+      setTimer(prevTimer => prevTimer - 1);
+    }, 1000);
+  }
+
+  return () => clearInterval(interval); // Cleanup interval on component unmount or dependency change
+}, [isRunning, timer]);
 
     const formatTime = (timeInSeconds: number): string => {
         const minutes = Math.floor(timeInSeconds / 60);
@@ -123,22 +164,16 @@ function PomodoroStart() {
     const startTimer = async () => {
         setIsRunning(true);
         setPomoNotifId(await scheduleNotification('pomodoroChannel', 'Start Break', 'pomodoro expired', timer));
-        setBreakNotifId(await scheduleNotification('pomodoroChannel', 'Start Work', 'Break expired', timer + 3));
+        setBreakNotifId(await scheduleNotification('pomodoroChannel', 'Start Work', 'Break expired', timer + 300));
         const date = new Date().toLocaleString();
         createRecord('pomodoro', {name: selectedTask, date: date});
         fetchData();
     };
 
-    const pauseTimer = () => {
-        cancelNotification(pomoNotifId);
-        cancelNotification(breakNotifId);
-        setIsRunning(false);
-    };
-
     const resetTimer = () => {
         setIsRunning(false);
         setIsBreak(false);
-        setTimer(3); // Reset to the initial time (25 minutes)
+        setTimer(60 * 25); // Reset to the initial time (25 minutes)
     };
 
     const showContextMenu = (task: {
@@ -212,14 +247,11 @@ function PomodoroStart() {
                 <Text style={styles.timerText}>{formatTime(timer)}</Text>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={isRunning ? pauseTimer : startTimer}
+                    onPress={isRunning ? resetTimer : startTimer}
                     disabled={selectedTask.length === 0}>
                     <Text style={styles.buttonText}>
-                        {isRunning ? 'Pause' : 'Start'}
+                        {isRunning ? 'Reset' : 'Start'}
                     </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={resetTimer}>
-                    <Text style={styles.buttonText}>Reset</Text>
                 </TouchableOpacity>
             </View>
             <View></View>

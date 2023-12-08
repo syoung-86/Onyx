@@ -74,7 +74,6 @@ const executeSql = (query: string, values: any[] = []): Promise<any> => {
         reject(error);
       },
       () => {
-        console.log('Transaction successful');
       },
     );
   });
@@ -194,7 +193,6 @@ export const readTodayPomodoro = async () => {
 export const readSelectedDateTodo = async (date: String) => {
     const formattedDate = formatDateString(date);
     const query = `SELECT * FROM todotoday WHERE date LIKE '${formattedDate}%'`;
-    console.log(date);
     const result = await executeSql(query);
 
     return result;

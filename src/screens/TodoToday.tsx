@@ -31,7 +31,6 @@ function parseDateString() {
     const day = String(dateObject.getDate()).padStart(2, '0');
 
     const formattedDate = `${year}-${month}-${day}`;
-    console.log('formatted date:', formattedDate);
     return formattedDate || '2023-11-27';
 }
 
