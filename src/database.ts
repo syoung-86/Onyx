@@ -59,7 +59,7 @@ const executeSql = (query: string, values: any[] = []): Promise<any> => {
           query,
           values,
           (txObj, resultSet) => {
-            console.log("result set:", query, resultSet.rows._array);
+            //console.log("result set:", query, resultSet.rows._array);
             resolve(resultSet.rows._array);
           },
           (txObj, error) => {
@@ -141,8 +141,8 @@ export const readRecords = async (table: string) => {
     const query = `SELECT * FROM ${table}`;
     try {
         const result = await executeSql(query);
-        console.log('read records from:', table);
-        console.log('read result:', result);
+        //console.log('read records from:', table);
+        //console.log('read result:', result);
         return result;
     } catch (error) {
         console.error('error reading records from: ', table, error);

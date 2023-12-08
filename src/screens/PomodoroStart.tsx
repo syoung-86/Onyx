@@ -4,13 +4,11 @@ import {
     Text,
     TouchableOpacity,
     Alert,
-    FlatList,
     Modal,
 } from 'react-native';
 import {
     LongPressGestureHandler,
     GestureHandlerRootView,
-    TextInput,
     State,
     ScrollView,
 } from 'react-native-gesture-handler';
@@ -18,7 +16,6 @@ import {styles} from '../styles';
 import {
     createRecord,
     readRecords,
-    updateRecord,
     deleteRecord,
     readTodayPomodoro,
     deletePomodoro,
@@ -26,10 +23,12 @@ import {
 import {RadioButton} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
 import EditTask from './EditTaskModal';
-import ProgressRing from './ProgressRingComponent';
+import scheduleNotification, { cancelNotification } from '../LocalNotifaction';
 
 function PomodoroStart() {
-    const [timer, setTimer] = useState(60 * 25); // Initial time in seconds (25 minutes)
+    const [pomoNotifId, setPomoNotifId] = useState('');
+    const [breakNotifId, setBreakNotifId] = useState('');
+    const [timer, setTimer] = useState(3); // Initial time in seconds (25 minutes)
     const [isRunning, setIsRunning] = useState(false);
     const [isBreak, setIsBreak] = useState(false);
     const [selectedTask, setSelectedTask] = useState('');
@@ -98,7 +97,6 @@ function PomodoroStart() {
         });
         setTaskProgress(updatedTaskProgress);
     }, [pomodorosData]);
-    console.log(taskProgress);
     useEffect(() => {
         let interval: NodeJS.Timeout;
 
@@ -108,7 +106,7 @@ function PomodoroStart() {
             }, 1000);
         } else if (timer === 0) {
             setIsBreak(prevIsBreak => !prevIsBreak);
-            setTimer(isBreak ? 60 * 25 : 300); // Switch between work and break (25 minutes or 5 minutes)
+            setTimer(isBreak ? 3: 3 ); // Switch between work and break (25 minutes or 5 minutes)
         }
 
         return () => clearInterval(interval);
@@ -122,21 +120,25 @@ function PomodoroStart() {
             .padStart(2, '0')}`;
     };
 
-    const startTimer = () => {
+    const startTimer = async () => {
         setIsRunning(true);
+        setPomoNotifId(await scheduleNotification('pomodoroChannel', 'Start Break', 'pomodoro expired', timer));
+        setBreakNotifId(await scheduleNotification('pomodoroChannel', 'Start Work', 'Break expired', timer + 3));
         const date = new Date().toLocaleString();
         createRecord('pomodoro', {name: selectedTask, date: date});
         fetchData();
     };
 
     const pauseTimer = () => {
+        cancelNotification(pomoNotifId);
+        cancelNotification(breakNotifId);
         setIsRunning(false);
     };
 
     const resetTimer = () => {
         setIsRunning(false);
         setIsBreak(false);
-        setTimer(60 * 25); // Reset to the initial time (25 minutes)
+        setTimer(3); // Reset to the initial time (25 minutes)
     };
 
     const showContextMenu = (task: {

@@ -68,7 +68,7 @@ export const processTodayData = async (): Promise<ProcessedRecord[]> => {
         today.getDate() + 1,
     );
     const todayData = filterRecordsByDateRange(data, startOfDay, endOfDay);
-    console.log('process today data: ', todayData);
+    //console.log('process today data: ', todayData);
     return todayData;
 };
 

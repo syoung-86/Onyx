@@ -5,7 +5,10 @@ import TodoNavigator from './src/screens/TodoNavigator';
 import StatsNavigator from './src/screens/StatsNavigator';
 import {initDatabase} from './src/database';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import { scheduleNotification } from './src/LocalNotifaction';
+import {
+    scheduleNotification,
+    setupNotificationChannel,
+} from './src/LocalNotifaction';
 import {PermissionStatus} from 'expo-modules-core';
 import * as Notifications from 'expo-notifications';
 import {Notification} from 'expo-notifications';
@@ -13,11 +16,43 @@ import React, {useEffect, useState} from 'react';
 
 const App = () => {
     React.useEffect(() => {
-        scheduleNotification(10);
+        const setupChannels = async () => {
+            await setupNotificationChannel(
+                'default',
+                'Default',
+                'General notifications',
+            );
+            await setupNotificationChannel(
+                'pomodoroChannel',
+                'Pomodoro',
+                'Pomodoro notifications',
+            );
+            await setupNotificationChannel(
+                'pomodoroReminder',
+                'Pomodoro Reminder',
+                'Pomodoro Reminder',
+            );
+            await setupNotificationChannel(
+                'todoChannel',
+                'Todo',
+                'Todo notifications',
+            );
+        };
+(async () => {
+      try {
+        console.log('Setting up channels and scheduling notification...');
+        await setupChannels();
+        scheduleNotification('todoChannel', 'todo title', 'todo body');
+        console.log('Notification scheduled successfully!');
+      } catch (error) {
+        console.error('Error setting up channels and scheduling notification:', error);
+      }
+    })();
         initDatabase();
     }, []);
     const [notificationPermissions, setNotificationPermissions] =
         useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
+
     const handleNotification = (notification: Notification) => {
         const {title} = notification.request.content;
         console.warn(title);
