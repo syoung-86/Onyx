@@ -75,10 +75,6 @@ function PomodoroStart() {
             fetchData();
         }, [selectedTask]),
     );
-    //useEffect(() => {
-    //fetchData();
-    //}, []);
-    //
     useEffect(() => {
         const updatedTaskProgress = new Map<string, number>();
         const today = new Date();
@@ -138,9 +134,8 @@ useEffect(() => {
       setIsBreak(false);
     }
   }
-}, [pomodorosData]);
+}, [pomodorosData,timer]);
 
-// Second useEffect for handling the timer interval
 useEffect(() => {
   let interval: NodeJS.Timeout;
 
