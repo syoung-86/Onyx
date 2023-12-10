@@ -202,7 +202,7 @@ function formatDateString(originalDate: String) {
     const parts = originalDate.split('-');
     if (parts.length === 3) {
         const formattedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
-        console.log('formatted date:', formattedDate);
+        //console.log('formatted date:', formattedDate);
         return formattedDate;
     } else {
         console.error('Invalid date format');

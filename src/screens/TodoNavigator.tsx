@@ -4,8 +4,10 @@ import TodoToday from './TodoToday';
 import TodoNew from './TodoNew';
 import {readRecords} from '../database'; // Import your database functions
 import CustomTodo from './CustomTodo';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
-const Tab = createMaterialBottomTabNavigator();
+const Drawer = createDrawerNavigator();
+
 
 function TodoNavigator() {
     const [tableNames, setTableNames] = useState([]);
@@ -19,28 +21,26 @@ function TodoNavigator() {
     }, []);
 
     return (
-        <Tab.Navigator initialRouteName="TodoToday">
-            <Tab.Screen
+        <Drawer.Navigator initialRouteName="TodoToday">
+        <Drawer.Screen
+        name="Create a new Todo"
+        component={TodoNew}
+        />
+            <Drawer.Screen
                 name="TodoToday"
                 component={TodoToday}
-                options={{tabBarLabel: 'Todo Today'}}
             />
 
-            <Tab.Screen
-                name="TodoNew"
-                component={TodoNew}
-                options={{tabBarLabel: 'New Todo'}}
-            />
 
             {tableNames.map(tableName => (
-                <Tab.Screen
+                <Drawer.Screen
                     key={tableName}
                     name={tableName}
-                    options={{tabBarLabel: tableName}}>
+                    >
                     {() => <CustomTodo tableName={tableName} />}
-                </Tab.Screen>
+                </Drawer.Screen>
             ))}
-        </Tab.Navigator>
+        </Drawer.Navigator>
     );
 }
 

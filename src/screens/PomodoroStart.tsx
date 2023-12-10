@@ -47,6 +47,7 @@ function PomodoroStart() {
         name: string;
         goal: number;
     }>();
+    const [currentTask, setCurrentTask] = useState<{id: number; name: string; date: string}>();
 
     const fetchData = async () => {
         try {
@@ -126,6 +127,7 @@ useEffect(() => {
     const startTime = parseDateStringToDate(latestPomodoro.date);
     const remainingTime = calculateRemainingTime(startTime, 1500);
     if (remainingTime > 0) {
+      setCurrentTask(latestPomodoro);
       setIsBreak(!isBreak);
       setTimer(remainingTime);
       setIsRunning(true);
@@ -235,17 +237,18 @@ useEffect(() => {
                 />
             </Modal>
 
-            {/* ... (existing code) */}
-            <View style={styles.container}></View>
+            <View>
+            <Text>Current Task: {isRunning && currentTask.name ? currentTask.name : ''}</Text>
+            </View>
 
             <View style={styles.contentContainer}>
                 <Text style={styles.timerText}>{formatTime(timer)}</Text>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={isRunning ? resetTimer : startTimer}
+                    onPress={startTimer}
                     disabled={selectedTask.length === 0}>
                     <Text style={styles.buttonText}>
-                        {isRunning ? 'Reset' : 'Start'}
+                        {'Start'}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -262,11 +265,7 @@ useEffect(() => {
                         key={`${taskName.id}-${taskName.name}`}>
                         <View>
                             <RadioButton.Item
-                                label={`${taskName.name} - Goal: ${
-                                    taskName.goal
-                                } - Progress: ${
-                                    taskProgress.get(taskName.name) || 0
-                                }`}
+                                label={taskName.name}
                                 value={taskName.name}
                                 status={
                                     selectedTask === taskName.name

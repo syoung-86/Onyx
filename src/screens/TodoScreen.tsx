@@ -161,7 +161,6 @@ const TodoScreen = () => {
                         <TextInput
                             multiline
                             numberOfLines={10}
-                            style={styles.markdown}
                             onChangeText={text => setNotes(text)}
                             value={notes}
                         />
