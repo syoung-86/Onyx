@@ -79,25 +79,50 @@ const executeSql = (query: string, values: any[] = []): Promise<any> => {
   });
 };
 
-export const createTodoTable = async (table: string, date: string) => {
-    console.log('create table:', table, date);
+export const deleteCutomTodo = async (table: string) => {
     const todoTable = table + 'Todos';
-    const createTodosQuery = `CREATE TABLE IF NOT EXISTS ${todoTable} (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, completed BOOLEAN)`;
-    const newCustomTodoQuery = `INSERT INTO customTodo (name, notes, date) VALUES(?, ?, ?)`;
+    const recordsQuery = 'DELETE FROM customTodo WHERE name=?';
+    const tableQuery = `DROP TABLE ${todoTable}`;
+    
+  try {
+    await executeSql(recordsQuery, [table]);
+    console.log('deleted records: ', table);
+  } catch (error) {
+    console.error('Error deleting records', error);
+    throw error; 
+  }
 
-    try {
-        await executeSql(createTodosQuery);
-        console.log('Created table:', todoTable);
-    } catch (error) {
-        console.error('Error creating todos table:', error);
-    }
+  try {
+    await executeSql(tableQuery);
+    console.log('dropped table : ', todoTable);
+  } catch (error) {
+    console.error('Error dropping table', error);
+    throw error; 
+  }
+}
+export const createTodoTable = async (table: string, date: string) => {
+  console.log('create table:', table, date);
+  const todoTable = table + 'Todos';
+  const createTodosQuery = `CREATE TABLE IF NOT EXISTS ${todoTable} (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, completed BOOLEAN)`;
+  const newCustomTodoQuery = `
+    INSERT INTO customTodo (name, notes, date) VALUES (?, ?, ?)
+  `;
 
-    try {
-        await executeSql(newCustomTodoQuery, [table, '', date]);
-        console.log('inserted record:', [table, '', date]);
-    } catch (error) {
-        console.error('Error creating custom todo:', error);
-    }
+  try {
+    await executeSql(createTodosQuery);
+    console.log('Created table:', todoTable);
+  } catch (error) {
+    console.error('Error creating todos table:', error);
+    throw error; // Propagate the error
+  }
+
+  try {
+    await executeSql(newCustomTodoQuery, [table, '', date]);
+    console.log('Inserted record:', [table, '', date]);
+  } catch (error) {
+    console.error('Error creating custom todo:', error);
+    throw error; // Propagate the error
+  }
 };
 
 export const readCustomTodo = async (name: string) => {
@@ -140,8 +165,6 @@ export const readRecords = async (table: string) => {
     const query = `SELECT * FROM ${table}`;
     try {
         const result = await executeSql(query);
-        //console.log('read records from:', table);
-        //console.log('read result:', result);
         return result;
     } catch (error) {
         console.error('error reading records from: ', table, error);

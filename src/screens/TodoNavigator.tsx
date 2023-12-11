@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import TodoToday from './TodoToday';
 import TodoNew from './TodoNew';
-import {readRecords} from '../database'; // Import your database functions
+import {readRecords} from '../database';
 import CustomTodo from './CustomTodo';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const Drawer = createDrawerNavigator();
 
-
 function TodoNavigator() {
     const [tableNames, setTableNames] = useState([]);
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         // Fetch the available table names from the database (todoDueDates)
@@ -18,26 +17,26 @@ function TodoNavigator() {
             const names = result.map(row => row.name); // Assuming 'name' is the property you want
             setTableNames(names);
         });
-    }, []);
-
+    }, [refresh]);
+    const handleRefresh = () => {
+        // Trigger a refresh by updating the state variable
+        setRefresh(prev => !prev);
+    };
     return (
         <Drawer.Navigator initialRouteName="TodoToday">
-        <Drawer.Screen
-        name="Create a new Todo"
-        component={TodoNew}
-        />
-            <Drawer.Screen
-                name="TodoToday"
-                component={TodoToday}
-            />
-
+            <Drawer.Screen name="Create a new Todo" >
+                {() => <TodoNew onRefresh={handleRefresh} />}
+            </Drawer.Screen>
+            <Drawer.Screen name="TodoToday" component={TodoToday} />
 
             {tableNames.map(tableName => (
-                <Drawer.Screen
-                    key={tableName}
-                    name={tableName}
-                    >
-                    {() => <CustomTodo tableName={tableName} />}
+                <Drawer.Screen key={tableName} name={tableName}>
+                    {() => (
+                        <CustomTodo
+                            tableName={tableName}
+                            onRefresh={handleRefresh}
+                        />
+                    )}
                 </Drawer.Screen>
             ))}
         </Drawer.Navigator>

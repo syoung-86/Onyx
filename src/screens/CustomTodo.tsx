@@ -5,6 +5,7 @@ import {styles} from '../styles';
 import {GestureHandlerRootView, TextInput} from 'react-native-gesture-handler';
 import {
     createRecord,
+    deleteCutomTodo,
     deleteRecord,
     readCustomTodo,
     readRecords,
@@ -12,12 +13,14 @@ import {
     updateRecord,
 } from '../database';
 import Markdown from '@ronradtke/react-native-markdown-display';
+import {useNavigation} from '@react-navigation/native';
 
 interface TodoScreenProps {
     tableName: string;
+    onRefresh?: () => void;
 }
 
-const TodoScreen: React.FC<TodoScreenProps> = ({tableName}) => {
+const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
     const [newTodo, setNewTodo] = useState('');
     const [allTodos, setAllTodos] = useState<
         {id: number; name: string; completed: boolean}[]
@@ -27,6 +30,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName}) => {
     const [iD, setId] = useState(0);
     const [isEditingNotes, setIsEditingNotes] = useState(false);
     const todoTable = tableName + 'Todos';
+    const navigation = useNavigation();
 
     const addTodo = async () => {
         console.log('New todo:', newTodo);
@@ -37,16 +41,16 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName}) => {
         );
         setNewTodo('');
     };
-const startEditingNotes = () => {
-    setIsEditingNotes(true);
-    setNotes(notes); // Set the edited notes to the current notes
-  };
+    const startEditingNotes = () => {
+        setIsEditingNotes(true);
+        setNotes(notes); // Set the edited notes to the current notes
+    };
 
-  const saveNotes = async () => {
-    await updateCustomTodo(iD, notes);
-    setNotes(notes);
-    setIsEditingNotes(false);
-  };
+    const saveNotes = async () => {
+        await updateCustomTodo(iD, notes);
+        setNotes(notes);
+        setIsEditingNotes(false);
+    };
 
     const toggleTodo = (id: number) => {
         const updatedTodos = allTodos.map(todo => {
@@ -64,6 +68,12 @@ const startEditingNotes = () => {
         });
     };
 
+    const deleteTodoPage = async () => {
+        deleteCutomTodo(tableName)
+            .then(() => onRefresh && onRefresh())
+            .catch(error => console.error('Error deleting todo page: ', error));
+        navigation.goBack();
+    };
     const showTodoContextMenu = (todo: {id: number; name: string}) => {
         Alert.alert('Todo Options', 'Select an action for this todo:', [
             {
@@ -155,31 +165,37 @@ const startEditingNotes = () => {
                         />
                     )}
                 />
-<View>
-          {isEditingNotes ? (
-            <TextInput
-              multiline
-              numberOfLines={10}
-              onChangeText={text => setNotes(text)}
-              value={notes}
-            />
-          ) : (
-            <View>
-              <TouchableOpacity onPress={startEditingNotes}>
-                <Text style={styles.buttonText}>Edit Notes</Text>
-              </TouchableOpacity>
-              <Markdown>{notes}</Markdown>
-            </View>
-          )}
+                <View>
+                    {isEditingNotes ? (
+                        <TextInput
+                            multiline
+                            numberOfLines={10}
+                            onChangeText={text => setNotes(text)}
+                            value={notes}
+                        />
+                    ) : (
+                        <View>
+                            <TouchableOpacity onPress={startEditingNotes}>
+                                <Text style={styles.buttonText}>
+                                    Edit Notes
+                                </Text>
+                            </TouchableOpacity>
+                            <Markdown>{notes}</Markdown>
+                        </View>
+                    )}
 
-          {isEditingNotes && (
-            <TouchableOpacity onPress={saveNotes}>
-              <Text style={styles.buttonText}>Save Notes</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+                    {isEditingNotes && (
+                        <TouchableOpacity onPress={saveNotes}>
+                            <Text style={styles.buttonText}>Save Notes</Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
                 <Markdown>{notes}</Markdown>
-
+            </View>
+            <View>
+                <TouchableOpacity onPress={deleteTodoPage}>
+                    <Text style={styles.buttonText}>Delete</Text>
+                </TouchableOpacity>
             </View>
         </GestureHandlerRootView>
     );

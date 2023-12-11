@@ -1,11 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Alert,
-    Modal,
-} from 'react-native';
+import {View, Text, TouchableOpacity, Alert, Modal} from 'react-native';
 import {
     LongPressGestureHandler,
     GestureHandlerRootView,
@@ -23,7 +17,7 @@ import {
 import {RadioButton} from 'react-native-paper';
 import {useFocusEffect} from '@react-navigation/native';
 import EditTask from './EditTaskModal';
-import scheduleNotification, { cancelNotification } from '../LocalNotifaction';
+import scheduleNotification, {cancelNotification} from '../LocalNotifaction';
 
 function PomodoroStart() {
     const [pomoNotifId, setPomoNotifId] = useState('');
@@ -47,7 +41,11 @@ function PomodoroStart() {
         name: string;
         goal: number;
     }>();
-    const [currentTask, setCurrentTask] = useState<{id: number; name: string; date: string}>();
+    const [currentTask, setCurrentTask] = useState<{
+        id: number;
+        name: string;
+        date: string;
+    }>();
 
     const fetchData = async () => {
         try {
@@ -95,60 +93,62 @@ function PomodoroStart() {
         setTaskProgress(updatedTaskProgress);
     }, [pomodorosData]);
 
-const parseDateStringToDate = (dateString: string): Date => {
-  const dateComponents = dateString.split(/[\s,/:]+/);
+    const parseDateStringToDate = (dateString: string): Date => {
+        const dateComponents = dateString.split(/[\s,/:]+/);
 
-  let hours = parseInt(dateComponents[3]);
-  if (dateComponents[6] && dateComponents[6].toUpperCase() === 'PM') {
-    hours = (hours % 12) + 12;
-  }
+        let hours = parseInt(dateComponents[3]);
+        if (dateComponents[6] && dateComponents[6].toUpperCase() === 'PM') {
+            hours = (hours % 12) + 12;
+        }
 
-  return new Date(
-    Date.UTC(
-      parseInt(dateComponents[2]), // Year
-      parseInt(dateComponents[0]) - 1, // Month (0-based)
-      parseInt(dateComponents[1]), // Day
-      hours, // Adjusted hours
-      parseInt(dateComponents[4]), // Minutes
-      parseInt(dateComponents[5]) || 0, // Seconds
-      parseInt(dateComponents[6]) || 0 // Milliseconds
-    )
-  );
-};
-const calculateRemainingTime = (startTime: Date, duration: number) => {
-    const currentTime = parseDateStringToDate(new Date().toLocaleString());
-    const elapsedTime = Math.floor((currentTime.getTime() - startTime.getTime()) / 1000);
-    const remainingTime = Math.max(duration - elapsedTime, 0);
-    return remainingTime;
-};
-useEffect(() => {
-  const latestPomodoro = pomodorosData[pomodorosData.length - 1];
-  if (latestPomodoro) {
-    const startTime = parseDateStringToDate(latestPomodoro.date);
-    const remainingTime = calculateRemainingTime(startTime, 1500);
-    if (remainingTime > 0) {
-      setCurrentTask(latestPomodoro);
-      setIsBreak(!isBreak);
-      setTimer(remainingTime);
-      setIsRunning(true);
-    } else {
-      setIsRunning(false);
-      setIsBreak(false);
-    }
-  }
-}, [pomodorosData,timer]);
+        return new Date(
+            Date.UTC(
+                parseInt(dateComponents[2]), // Year
+                parseInt(dateComponents[0]) - 1, // Month (0-based)
+                parseInt(dateComponents[1]), // Day
+                hours, // Adjusted hours
+                parseInt(dateComponents[4]), // Minutes
+                parseInt(dateComponents[5]) || 0, // Seconds
+                parseInt(dateComponents[6]) || 0, // Milliseconds
+            ),
+        );
+    };
+    const calculateRemainingTime = (startTime: Date, duration: number) => {
+        const currentTime = parseDateStringToDate(new Date().toLocaleString());
+        const elapsedTime = Math.floor(
+            (currentTime.getTime() - startTime.getTime()) / 1000,
+        );
+        const remainingTime = Math.max(duration - elapsedTime, 0);
+        return remainingTime;
+    };
+    useEffect(() => {
+        const latestPomodoro = pomodorosData[pomodorosData.length - 1];
+        if (latestPomodoro) {
+            const startTime = parseDateStringToDate(latestPomodoro.date);
+            const remainingTime = calculateRemainingTime(startTime, 1500);
+            if (remainingTime > 0) {
+                setCurrentTask(latestPomodoro);
+                setIsBreak(!isBreak);
+                setTimer(remainingTime);
+                setIsRunning(true);
+            } else {
+                setIsRunning(false);
+                setIsBreak(false);
+            }
+        }
+    }, [pomodorosData, timer]);
 
-useEffect(() => {
-  let interval: NodeJS.Timeout;
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
 
-  if (isRunning && timer > 0) {
-    interval = setInterval(() => {
-      setTimer(prevTimer => prevTimer - 1);
-    }, 1000);
-  }
+        if (isRunning && timer > 0) {
+            interval = setInterval(() => {
+                setTimer(prevTimer => prevTimer - 1);
+            }, 1000);
+        }
 
-  return () => clearInterval(interval); // Cleanup interval on component unmount or dependency change
-}, [isRunning, timer]);
+        return () => clearInterval(interval); // Cleanup interval on component unmount or dependency change
+    }, [isRunning, timer]);
 
     const formatTime = (timeInSeconds: number): string => {
         const minutes = Math.floor(timeInSeconds / 60);
@@ -160,8 +160,22 @@ useEffect(() => {
 
     const startTimer = async () => {
         setIsRunning(true);
-        setPomoNotifId(await scheduleNotification('pomodoroChannel', 'Start Break', 'pomodoro expired', timer));
-        setBreakNotifId(await scheduleNotification('pomodoroChannel', 'Start Work', 'Break expired', timer + 300));
+        setPomoNotifId(
+            await scheduleNotification(
+                'pomodoroChannel',
+                'Start Break',
+                'pomodoro expired',
+                timer,
+            ),
+        );
+        setBreakNotifId(
+            await scheduleNotification(
+                'pomodoroChannel',
+                'Start Work',
+                'Break expired',
+                timer + 300,
+            ),
+        );
         const date = new Date().toLocaleString();
         createRecord('pomodoro', {name: selectedTask, date: date});
         fetchData();
@@ -238,7 +252,10 @@ useEffect(() => {
             </Modal>
 
             <View>
-            <Text>Current Task: {isRunning && currentTask.name ? currentTask.name : ''}</Text>
+                <Text>
+                    Current Task:{' '}
+                    {isRunning && currentTask.name ? currentTask.name : ''}
+                </Text>
             </View>
 
             <View style={styles.contentContainer}>
@@ -247,9 +264,7 @@ useEffect(() => {
                     style={styles.button}
                     onPress={startTimer}
                     disabled={selectedTask.length === 0}>
-                    <Text style={styles.buttonText}>
-                        {'Start'}
-                    </Text>
+                    <Text style={styles.buttonText}>{'Start'}</Text>
                 </TouchableOpacity>
             </View>
             <View></View>
