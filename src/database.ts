@@ -27,29 +27,24 @@ export const initDatabase = () => {
 db.exec([{sql: 'PRAGMA foreign_keys = ON;', args: []}], false, () =>
     console.log('Foreign keys turned on'),
 );
-    db.transaction(tx => {
-        tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS todotoday (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, completed BOOLEAN, date TEXT)',
-        );
-        tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS todosomeday (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, completed BOOLEAN, date TEXT)',
-        );
-        tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS todoeveryday (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, completed BOOLEAN, date TEXT)',
-        );
 
-        tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS taskName (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, goal INTEGER)',
-        );
 
-        tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS pomodoro (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, date TEXT)',
-        );
+db.exec([{sql: 'CREATE TABLE IF NOT EXISTS taskName (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, goal INTEGER)', args: []}], false, () =>
+    console.log('created taskName table'),
+);
 
-        tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS customTodo (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, notes TEXT(10000), date TEXT)',
-        );
-    });
+
+db.exec([{sql: 'CREATE TABLE IF NOT EXISTS todotoday (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, completed BOOLEAN, date TEXT)', args: []}], false, () =>
+    console.log('created todotday table'),
+);
+
+db.exec([{sql: 'CREATE TABLE IF NOT EXISTS pomodoro (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, date TEXT)', args: []}], false, () =>
+    console.log('created pomodoro table'),
+);
+
+db.exec([{sql: 'CREATE TABLE IF NOT EXISTS customTodo (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, notes TEXT(10000), date TEXT)', args: []}], false, () =>
+    console.log('created customTodo table'),
+);
 }
 const executeSql = (query: string, values: any[] = []): Promise<any> => {
   return new Promise((resolve, reject) => {

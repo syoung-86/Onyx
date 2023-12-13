@@ -109,7 +109,7 @@ export const processGoalData = async (): Promise<Map<string, number>> => {
     });
 
     const taskNames: {id: number; name: string; goal: number}[] =
-        await readRecords('taskname');
+        await readRecords('taskName');
     const progressData = new Map<string, number>();
 
     taskNames.forEach(task => {

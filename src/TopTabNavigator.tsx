@@ -22,7 +22,7 @@ const TopTabsNavigation = () => {
         alignItems: 'center',
 
         // Paddings to handle safe area
-        paddingTop: insets.top,
+        paddingTop: 100,
         paddingBottom: insets.bottom,
         paddingLeft: insets.left,
         paddingRight: insets.right,

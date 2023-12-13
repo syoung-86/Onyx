@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, FlatList, TouchableOpacity, Text, Alert} from 'react-native';
 import {List, Checkbox} from 'react-native-paper';
 import {styles} from '../styles';
-import {GestureHandlerRootView, TextInput} from 'react-native-gesture-handler';
+import {GestureHandlerRootView, ScrollView, TextInput} from 'react-native-gesture-handler';
 import {
     createRecord,
     deleteCutomTodo,
@@ -74,6 +74,23 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
             .catch(error => console.error('Error deleting todo page: ', error));
         navigation.goBack();
     };
+
+    const showNotesContextMenu = () => {
+        Alert.alert('Todo Options', 'Are you sure you wish to delete this page? ', [
+            {
+                text: 'Delete',
+                onPress: () => {
+                    // Add your logic to delete the todo here
+                    deleteTodoPage();
+                },
+                style: 'destructive', // This will show the option in red
+            },
+            {
+                text: 'Cancel',
+                style: 'cancel',
+            },
+        ]);
+    };
     const showTodoContextMenu = (todo: {id: number; name: string}) => {
         Alert.alert('Todo Options', 'Select an action for this todo:', [
             {
@@ -131,6 +148,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
 
     return (
         <GestureHandlerRootView>
+        <ScrollView>
             <View>
                 <Text>{dueDate}</Text>
             </View>
@@ -148,6 +166,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
                 </View>
 
                 <FlatList
+                    scrollEnabled={false}
                     data={allTodos}
                     keyExtractor={item => item.id.toString()}
                     renderItem={({item}) => (
@@ -165,6 +184,9 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
                         />
                     )}
                 />
+            </View>
+            <View>
+
                 <View>
                     {isEditingNotes ? (
                         <TextInput
@@ -190,13 +212,11 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
                         </TouchableOpacity>
                     )}
                 </View>
-                <Markdown>{notes}</Markdown>
-            </View>
-            <View>
-                <TouchableOpacity onPress={deleteTodoPage}>
+                <TouchableOpacity onPress={showNotesContextMenu}>
                     <Text style={styles.buttonText}>Delete</Text>
                 </TouchableOpacity>
             </View>
+            </ScrollView>
         </GestureHandlerRootView>
     );
 };

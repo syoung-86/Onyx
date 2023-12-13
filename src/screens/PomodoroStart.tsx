@@ -20,9 +20,13 @@ import EditTask from './EditTaskModal';
 import scheduleNotification, {cancelNotification} from '../LocalNotifaction';
 
 function PomodoroStart() {
+    const WORK_LENGTH = 5;
+    const BREAK_LENGTH = 3;
+    const [showStart, setShowStart] = useState(true)
     const [pomoNotifId, setPomoNotifId] = useState('');
     const [breakNotifId, setBreakNotifId] = useState('');
-    const [timer, setTimer] = useState(60 * 25); // Initial time in seconds (25 minutes)
+    const [isReset, setIsReset] = useState(false);
+    const [timer, setTimer] = useState(WORK_LENGTH); // Initial time in seconds (25 minutes)
     const [isRunning, setIsRunning] = useState(false);
     const [isBreak, setIsBreak] = useState(false);
     const [selectedTask, setSelectedTask] = useState('');
@@ -57,7 +61,7 @@ function PomodoroStart() {
     };
     useFocusEffect(
         React.useCallback(() => {
-            readRecords('taskname')
+            readRecords('taskName')
                 .then(names =>
                     setTaskNames(
                         names as {id: number; name: string; goal: number}[],
@@ -123,17 +127,24 @@ function PomodoroStart() {
     };
     useEffect(() => {
         const latestPomodoro = pomodorosData[pomodorosData.length - 1];
-        if (latestPomodoro) {
+        if (latestPomodoro && !isReset) {
             const startTime = parseDateStringToDate(latestPomodoro.date);
-            const remainingTime = calculateRemainingTime(startTime, 1500);
-            if (remainingTime > 0) {
+            const remainingWorkTime = calculateRemainingTime(startTime, WORK_LENGTH);
+            const remainingBreakTime = calculateRemainingTime(startTime, WORK_LENGTH + BREAK_LENGTH);
+            if (remainingWorkTime > 0) {
                 setCurrentTask(latestPomodoro);
-                setIsBreak(!isBreak);
-                setTimer(remainingTime);
+                setIsBreak(false);
+                setTimer(remainingWorkTime);
                 setIsRunning(true);
-            } else {
+                setShowStart(false);
+            } else if(remainingBreakTime > 0) {
+                setIsBreak(true)
+                console.log("BREAK:", isBreak);
+                setTimer(remainingBreakTime)
+            }else {
                 setIsRunning(false);
                 setIsBreak(false);
+                setTimer(WORK_LENGTH)
             }
         }
     }, [pomodorosData, timer]);
@@ -160,6 +171,7 @@ function PomodoroStart() {
 
     const startTimer = async () => {
         setIsRunning(true);
+        setIsReset(false);
         setPomoNotifId(
             await scheduleNotification(
                 'pomodoroChannel',
@@ -173,7 +185,7 @@ function PomodoroStart() {
                 'pomodoroChannel',
                 'Start Work',
                 'Break expired',
-                timer + 300,
+                timer + BREAK_LENGTH,
             ),
         );
         const date = new Date().toLocaleString();
@@ -182,9 +194,17 @@ function PomodoroStart() {
     };
 
     const resetTimer = () => {
+        const latestPomodoro = pomodorosData[pomodorosData.length - 1];
+        if (latestPomodoro) {
+            console.log('latest in reset timer', latestPomodoro);
+            deleteRecord('pomodoro', latestPomodoro.id);
+        }
         setIsRunning(false);
         setIsBreak(false);
-        setTimer(60 * 25); // Reset to the initial time (25 minutes)
+        setTimer(WORK_LENGTH); // Reset to the initial time (25 minutes)
+        setIsReset(true);
+        cancelNotification(breakNotifId);
+        cancelNotification(pomoNotifId);
     };
 
     const showContextMenu = (task: {
@@ -253,8 +273,14 @@ function PomodoroStart() {
 
             <View>
                 <Text>
-                    Current Task:{' '}
-                    {isRunning && currentTask.name ? currentTask.name : ''}
+                    Current: {' '}
+                    {isRunning && currentTask && !isBreak ? (
+                        currentTask.name
+                    ) : isBreak ? (
+                        'Break'
+                    ) : (
+                        'None'
+                    )}
                 </Text>
             </View>
 
@@ -262,9 +288,9 @@ function PomodoroStart() {
                 <Text style={styles.timerText}>{formatTime(timer)}</Text>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={startTimer}
+                    onPress={!isRunning ? startTimer : resetTimer}
                     disabled={selectedTask.length === 0}>
-                    <Text style={styles.buttonText}>{'Start'}</Text>
+                    <Text style={styles.buttonText}>{!isRunning ? 'Start' : 'Reset'}</Text>
                 </TouchableOpacity>
             </View>
             <View></View>
@@ -283,7 +309,7 @@ function PomodoroStart() {
                                 label={taskName.name}
                                 value={taskName.name}
                                 status={
-                                    selectedTask === taskName.name
+                                    (selectedTask === taskName.name || selectedTask === '')
                                         ? 'checked'
                                         : 'unchecked'
                                 }

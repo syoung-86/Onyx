@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
   button : {
     padding : 10,
     marginHorizontal : 10, // Adjust the spacing between buttons
+    color : 'gray',
   },
   buttonText : {
     fontSize : 16,

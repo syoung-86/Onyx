@@ -122,8 +122,6 @@ const TodoToday: React.FC = () => {
 
     return (
         <GestureHandlerRootView>
-            <View style={styles.container}></View>
-
             <View style={styles.contentContainer}>
                 <View>
                     <TextInput
@@ -146,11 +144,9 @@ const TodoToday: React.FC = () => {
                             disableTouchEvent: true,
                         },
                     }}
-                    // Handler which gets executed on day long press. Default = undefined
                     onDayLongPress={day => {
                         console.log('selected day', day);
                     }}
-                    // Handler which gets executed when visible month changes in calendar. Default = undefined
                     onMonthChange={month => {
                         console.log('month changed', month);
                     }}

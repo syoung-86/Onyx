@@ -4,7 +4,7 @@ import Pomodoro from './src/screens/Pomodoro';
 import TodoNavigator from './src/screens/TodoNavigator';
 import StatsNavigator from './src/screens/StatsNavigator';
 import {initDatabase} from './src/database';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SafeAreaProvider, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
     scheduleNotification,
     setupNotificationChannel,
@@ -13,8 +13,9 @@ import {PermissionStatus} from 'expo-modules-core';
 import * as Notifications from 'expo-notifications';
 import {Notification} from 'expo-notifications';
 import React, {useEffect, useState} from 'react';
+import { View } from 'react-native';
 
-const App = () => {
+const Main = () => {
     React.useEffect(() => {
         const setupChannels = async () => {
             await setupNotificationChannel(
@@ -74,8 +75,18 @@ const App = () => {
         return () => listener.remove();
     }, [notificationPermissions]);
     const Tab = createMaterialTopTabNavigator();
+  const insets = useSafeAreaInsets();
     return (
-        <SafeAreaProvider>
+            <View
+      style={{
+        flex: 1,
+        justifyContent: 'space-between',
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
+      }}
+    >
             <NavigationContainer>
                 <Tab.Navigator initialRouteName="Pomodoro">
                     <Tab.Screen name="Pomodoro" component={Pomodoro} />
@@ -88,8 +99,15 @@ const App = () => {
                     <Tab.Screen name="Stats" component={StatsNavigator} />
                 </Tab.Navigator>
             </NavigationContainer>
-        </SafeAreaProvider>
+            </View>
     );
 };
 
+const App = () => {
+    return(
+    <SafeAreaProvider>
+    <Main/>
+    </SafeAreaProvider>
+    )
+}
 export default App;

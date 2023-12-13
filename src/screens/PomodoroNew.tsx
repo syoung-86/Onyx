@@ -31,19 +31,28 @@ function PomodoroNew() {
 
     const addTaskName = () => {
         console.log('New Task Name:', newTaskName, 'Goal:', goal);
-        createRecord('taskName', {
-            name: newTaskName,
-            goal: parseInt(goal, 10) || 0,
-        }).then(() => {
-            // After inserting the task name, fetch all task names again and update the state
-            readRecords('taskName')
-                .then(names =>
-                    setTaskNames(names as {id: number; name: string}[]),
-                )
-                .catch(error =>
-                    console.error('Error fetching task names:', error),
-                );
+try {
+  createRecord('taskName', {
+    name: newTaskName,
+    goal: parseInt(goal, 10) || 0,
+  })
+    .then(() => {
+      // After inserting the task name, fetch all task names again and update the state
+      readRecords('taskName')
+        .then((names) => {
+          setTaskNames(names as { id: number; name: string }[]);
+        })
+        .catch((readError) => {
+          console.error('Error fetching task names:', readError);
         });
+    })
+    .catch((createError) => {
+      console.error('Error creating record:', createError);
+      Alert.alert("Error, task names must be unique");
+    });
+} catch (error) {
+  console.error('Unexpected error:', error);
+}
     };
 
     const showContextMenu = (task: {id: number; name: string}) => {

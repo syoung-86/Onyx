@@ -23,11 +23,11 @@ function TodoNavigator() {
         setRefresh(prev => !prev);
     };
     return (
-        <Drawer.Navigator initialRouteName="TodoToday">
+        <Drawer.Navigator initialRouteName="Daily">
             <Drawer.Screen name="Create a new Todo" >
                 {() => <TodoNew onRefresh={handleRefresh} />}
             </Drawer.Screen>
-            <Drawer.Screen name="TodoToday" component={TodoToday} />
+            <Drawer.Screen name="Daily" component={TodoToday} />
 
             {tableNames.map(tableName => (
                 <Drawer.Screen key={tableName} name={tableName}>
