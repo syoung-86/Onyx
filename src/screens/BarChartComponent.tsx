@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {BarChart} from 'react-native-chart-kit';
 import {ProcessedRecord} from './StatsData';
+import { Dimensions } from 'react-native';
 
 interface ChartProps {
     data: ProcessedRecord[];
@@ -10,7 +11,8 @@ interface ChartProps {
 
 const BarChartComponent: React.FC<ChartProps> = ({data, title}) => {
     const hourFrequencyMap = new Map<number, number>();
-
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
     // Aggregate data based on the title
     let keyExtractor: (record: ProcessedRecord) => number;
     let labelFormatter: (item: {hour: number; frequency: number}) => string;
@@ -32,6 +34,26 @@ const BarChartComponent: React.FC<ChartProps> = ({data, title}) => {
                     'Thu',
                     'Fri',
                     'Sat',
+                ];
+                return dayNames[item.hour];
+            };
+        case 'all':
+            keyExtractor = record => record.date.getMonth(); // 0-indexed, Sunday as 0
+            labelFormatter = item => {
+                // Define an array of day names as per your locale
+                const dayNames = [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
                 ];
                 return dayNames[item.hour];
             };
@@ -68,16 +90,18 @@ const BarChartComponent: React.FC<ChartProps> = ({data, title}) => {
                         },
                     ],
                 }}
-                width={500}
+                width={windowWidth}
                 height={220}
                 yAxisSuffix=" min"
+                yAxisLabel=''
                 yAxisInterval={25} // Adjust as needed based on your requirement
                 chartConfig={{
-                    backgroundGradientFrom: '#ffffff',
-                    backgroundGradientTo: '#ffffff',
+            backgroundGradientFrom: 'rgb(17, 17, 27)',
+            backgroundGradientTo: 'rgb(17, 17, 27)',
                     decimalPlaces: 2,
-                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                    color: (opacity = 1) => `rgba(116, 199, 236, ${opacity})`,
+                    labelColor: (opacity = 1) => `rgba(205, 214, 244, ${opacity})`,
+                    paddingRight: 10,
                 }}
             />
         </View>

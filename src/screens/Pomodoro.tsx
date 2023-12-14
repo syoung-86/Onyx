@@ -3,8 +3,10 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import PomodoroStart from './PomodoroStart';
 import PomodoroNew from './PomodoroNew';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {NavigationTheme} from '../styles';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 const Pomodoro = () => {
     return (

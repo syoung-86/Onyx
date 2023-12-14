@@ -1,9 +1,11 @@
 import {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
 import {ProcessedRecord, processAllData} from './StatsData';
 import PieChart from './PieChart';
 import ContributionGraphComponent from './ContributionGraphComponent';
 import React from 'react';
+import BarChartComponent from './BarChartComponent';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const StatsAll = () => {
     const [data, setData] = useState<ProcessedRecord[]>([]);
@@ -37,8 +39,13 @@ const StatsAll = () => {
     // Render your component with the fetched data
     return (
         <View>
+
+        <GestureHandlerRootView>
+            <ScrollView>
             <PieChart data={data} title="All" />
-            <ContributionGraphComponent data={data} title="All" />
+            <BarChartComponent data={data} title="All" />
+            </ScrollView>
+            </GestureHandlerRootView>
         </View>
     );
 };

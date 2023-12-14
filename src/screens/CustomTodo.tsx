@@ -2,7 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {View, FlatList, TouchableOpacity, Text, Alert} from 'react-native';
 import {List, Checkbox} from 'react-native-paper';
 import {styles} from '../styles';
-import {GestureHandlerRootView, ScrollView, TextInput} from 'react-native-gesture-handler';
+import {
+    GestureHandlerRootView,
+    ScrollView,
+    TextInput,
+} from 'react-native-gesture-handler';
 import {
     createRecord,
     deleteCutomTodo,
@@ -76,20 +80,24 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
     };
 
     const showNotesContextMenu = () => {
-        Alert.alert('Todo Options', 'Are you sure you wish to delete this page? ', [
-            {
-                text: 'Delete',
-                onPress: () => {
-                    // Add your logic to delete the todo here
-                    deleteTodoPage();
+        Alert.alert(
+            'Todo Options',
+            'Are you sure you wish to delete this page? ',
+            [
+                {
+                    text: 'Delete',
+                    onPress: () => {
+                        // Add your logic to delete the todo here
+                        deleteTodoPage();
+                    },
+                    style: 'destructive', // This will show the option in red
                 },
-                style: 'destructive', // This will show the option in red
-            },
-            {
-                text: 'Cancel',
-                style: 'cancel',
-            },
-        ]);
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+            ],
+        );
     };
     const showTodoContextMenu = (todo: {id: number; name: string}) => {
         Alert.alert('Todo Options', 'Select an action for this todo:', [
@@ -148,74 +156,77 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
 
     return (
         <GestureHandlerRootView>
-        <ScrollView>
-            <View>
-                <Text>{dueDate}</Text>
-            </View>
-
-            <View>
+            <ScrollView>
                 <View>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={text => setNewTodo(text)}
-                        value={newTodo}
-                    />
-                    <TouchableOpacity onPress={addTodo}>
-                        <Text style={styles.buttonText}>Add New Todo</Text>
-                    </TouchableOpacity>
+                    <Text>{dueDate}</Text>
                 </View>
 
-                <FlatList
-                    scrollEnabled={false}
-                    data={allTodos}
-                    keyExtractor={item => item.id.toString()}
-                    renderItem={({item}) => (
-                        <List.Item
-                            title={item.name}
-                            left={() => (
-                                <Checkbox
-                                    status={
-                                        item.completed ? 'checked' : 'unchecked'
-                                    }
-                                    onPress={() => toggleTodo(item.id)}
-                                />
-                            )}
-                            onLongPress={() => showTodoContextMenu(item)}
-                        />
-                    )}
-                />
-            </View>
-            <View>
-
                 <View>
-                    {isEditingNotes ? (
+                    <View>
                         <TextInput
-                            multiline
-                            numberOfLines={10}
-                            onChangeText={text => setNotes(text)}
-                            value={notes}
+                            style={styles.input}
+                            onChangeText={text => setNewTodo(text)}
+                            value={newTodo}
                         />
-                    ) : (
-                        <View>
-                            <TouchableOpacity onPress={startEditingNotes}>
+                        <TouchableOpacity onPress={addTodo}>
+                            <Text style={styles.buttonText}>Add New Todo</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <FlatList
+                        scrollEnabled={false}
+                        data={allTodos}
+                        keyExtractor={item => item.id.toString()}
+                        renderItem={({item}) => (
+                            <List.Item
+                                title={item.name}
+                                left={() => (
+                                    <Checkbox
+                                        status={
+                                            item.completed
+                                                ? 'checked'
+                                                : 'unchecked'
+                                        }
+                                        onPress={() => toggleTodo(item.id)}
+                                    />
+                                )}
+                                onLongPress={() => showTodoContextMenu(item)}
+                            />
+                        )}
+                    />
+                </View>
+                <View>
+                    <View>
+                        {isEditingNotes ? (
+                            <TextInput
+                                multiline
+                                numberOfLines={10}
+                                onChangeText={text => setNotes(text)}
+                                value={notes}
+                            />
+                        ) : (
+                            <View>
+                                <TouchableOpacity onPress={startEditingNotes}>
+                                    <Text style={styles.buttonText}>
+                                        Edit Notes
+                                    </Text>
+                                </TouchableOpacity>
+                                <Markdown>{notes}</Markdown>
+                            </View>
+                        )}
+
+                        {isEditingNotes && (
+                            <TouchableOpacity onPress={saveNotes}>
                                 <Text style={styles.buttonText}>
-                                    Edit Notes
+                                    Save Notes
                                 </Text>
                             </TouchableOpacity>
-                            <Markdown>{notes}</Markdown>
-                        </View>
-                    )}
-
-                    {isEditingNotes && (
-                        <TouchableOpacity onPress={saveNotes}>
-                            <Text style={styles.buttonText}>Save Notes</Text>
-                        </TouchableOpacity>
-                    )}
+                        )}
+                    </View>
+                    <TouchableOpacity onPress={showNotesContextMenu}>
+                        <Text style={styles.buttonText}>Delete</Text>
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={showNotesContextMenu}>
-                    <Text style={styles.buttonText}>Delete</Text>
-                </TouchableOpacity>
-            </View>
             </ScrollView>
         </GestureHandlerRootView>
     );

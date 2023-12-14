@@ -3,10 +3,18 @@ import React, {useState, useEffect} from 'react';
 import {View} from 'react-native';
 import {ProgressChart} from 'react-native-chart-kit';
 import {processGoalData} from './StatsData';
+import {getRandomColor, randomizeArray} from './StatsHelper';
+import {styles} from '../styles';
+import { graphColors } from '../themes/catppuchin-mocha';
 
 const ProgressChartComponent = () => {
-    const [progressData, setProgressData] = useState(new Map());
 
+const [progressData, setProgressData] = useState({ labels: [], data: [] });
+
+
+    const seed = '27';
+    let randomColors = randomizeArray(seed);
+    randomColors = randomColors.map(rgbColor => `rgba(${rgbColor.slice(4, -1)}, 1)`);
     useFocusEffect(
         React.useCallback(() => {
             const fetchData = async () => {
@@ -23,20 +31,21 @@ const ProgressChartComponent = () => {
     );
 
     const chartConfig = {
-        backgroundGradientFrom: '#ffffff',
-        backgroundGradientTo: '#ffffff',
+        backgroundGradientFrom: 'rgb(17, 17, 27)',
+        backgroundGradientTo: 'rgb(30, 30, 46)',
         decimalPlaces: 2,
-        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-        labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    color: (opacity = 1) => `rgba(137, 180, 250, ${opacity})`,
+        propsForLabels: {
+fontSize: 12,
+    fill: styles.bodyCopy.color,
+    fillOpacity: 1,
+        }
     };
 
     return (
         <View>
             <ProgressChart
-                data={{
-                    labels: Array.from(progressData.keys()),
-                    data: Array.from(progressData.values()),
-                }}
+                data={progressData}
                 width={420}
                 height={250}
                 chartConfig={chartConfig}

@@ -24,7 +24,7 @@ function TodoNavigator() {
     };
     return (
         <Drawer.Navigator initialRouteName="Daily">
-            <Drawer.Screen name="Create a new Todo" >
+            <Drawer.Screen name="Create a new Todo">
                 {() => <TodoNew onRefresh={handleRefresh} />}
             </Drawer.Screen>
             <Drawer.Screen name="Daily" component={TodoToday} />

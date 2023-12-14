@@ -81,7 +81,6 @@ export const processWeekData = async (): Promise<ProcessedRecord[]> => {
         today.getDate() - 6,
     );
     const weekData = filterRecordsByDateRange(data, startOfLastWeek, today);
-    console.log('process week data: ', weekData);
     return weekData;
 };
 
@@ -94,32 +93,40 @@ export const processMonthData = async (): Promise<ProcessedRecord[]> => {
         today.getDate(),
     );
     const monthData = filterRecordsByDateRange(data, startOfLastMonth, today);
-    console.log('process month data: ', monthData);
     return monthData;
 };
 
-export const processGoalData = async (): Promise<Map<string, number>> => {
-    const taskProgress = new Map<string, number>();
-    const pomodorosData: {id: number; name: string; date: string}[] =
-        await readTodayPomodoro();
+interface GoalChartData {
+  labels: string[];
+  data: number[];
+}
 
-    pomodorosData.forEach(data => {
-        const currentProgress = taskProgress.get(data.name) || 0;
-        taskProgress.set(data.name, currentProgress + 1);
-    });
+export const processGoalData = async (): Promise<{labels: string[], data: number[]}> => {
+  const taskProgress = new Map<string, number>();
+  const pomodorosData: { id: number; name: string; date: string }[] =
+    await readTodayPomodoro();
 
-    const taskNames: {id: number; name: string; goal: number}[] =
-        await readRecords('taskName');
-    const progressData = new Map<string, number>();
+  pomodorosData.forEach(data => {
+    const currentProgress = taskProgress.get(data.name) || 0;
+    taskProgress.set(data.name, currentProgress + 1);
+  });
 
-    taskNames.forEach(task => {
-        const progress = taskProgress.has(task.name)
-            ? taskProgress.get(task.name) || 0
-            : 0;
-        const goal = task.goal;
-        const percentage = progress / goal;
-        progressData.set(task.name, percentage);
-    });
+  const taskNames: { id: number; name: string; goal: number }[] =
+    await readRecords('taskName');
 
-    return progressData;
+  const labels: string[] = [];
+  const data: number[] = [];
+
+  taskNames.forEach(task => {
+    const progress = taskProgress.get(task.name) || 0;
+    const goal = task.goal;
+    // Check if the goal is a valid number before calculating the percentage
+    if (!isNaN(goal) && goal !== 0) {
+      const percentage = progress / goal;
+      labels.push(task.name);
+      data.push(percentage);
+    }
+  });
+
+  return { labels, data };
 };

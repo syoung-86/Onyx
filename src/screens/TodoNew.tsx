@@ -32,13 +32,13 @@ const TodoNew: React.FC<TodoNewProps> = ({onRefresh}) => {
     };
     return (
         <GestureHandlerRootView>
-        <View>
-        <TextInput
-        placeholder="Title*"
-        onChangeText={text => setNewTodo(text)}
-        />
-        </View>
-        <Text> Select a due date:</Text>
+            <View>
+                <TextInput
+                    placeholder="Title*"
+                    onChangeText={text => setNewTodo(text)}
+                />
+            </View>
+            <Text> Select a due date:</Text>
             <Calendar
                 onDayPress={day => {
                     console.log('selected day', day);

@@ -22,7 +22,7 @@ import scheduleNotification, {cancelNotification} from '../LocalNotifaction';
 function PomodoroStart() {
     const WORK_LENGTH = 5;
     const BREAK_LENGTH = 3;
-    const [showStart, setShowStart] = useState(true)
+    const [showStart, setShowStart] = useState(true);
     const [pomoNotifId, setPomoNotifId] = useState('');
     const [breakNotifId, setBreakNotifId] = useState('');
     const [isReset, setIsReset] = useState(false);
@@ -129,22 +129,28 @@ function PomodoroStart() {
         const latestPomodoro = pomodorosData[pomodorosData.length - 1];
         if (latestPomodoro && !isReset) {
             const startTime = parseDateStringToDate(latestPomodoro.date);
-            const remainingWorkTime = calculateRemainingTime(startTime, WORK_LENGTH);
-            const remainingBreakTime = calculateRemainingTime(startTime, WORK_LENGTH + BREAK_LENGTH);
+            const remainingWorkTime = calculateRemainingTime(
+                startTime,
+                WORK_LENGTH,
+            );
+            const remainingBreakTime = calculateRemainingTime(
+                startTime,
+                WORK_LENGTH + BREAK_LENGTH,
+            );
             if (remainingWorkTime > 0) {
                 setCurrentTask(latestPomodoro);
                 setIsBreak(false);
                 setTimer(remainingWorkTime);
                 setIsRunning(true);
                 setShowStart(false);
-            } else if(remainingBreakTime > 0) {
-                setIsBreak(true)
-                console.log("BREAK:", isBreak);
-                setTimer(remainingBreakTime)
-            }else {
+            } else if (remainingBreakTime > 0) {
+                setIsBreak(true);
+                console.log('BREAK:', isBreak);
+                setTimer(remainingBreakTime);
+            } else {
                 setIsRunning(false);
                 setIsBreak(false);
-                setTimer(WORK_LENGTH)
+                setTimer(WORK_LENGTH);
             }
         }
     }, [pomodorosData, timer]);
@@ -272,25 +278,25 @@ function PomodoroStart() {
             </Modal>
 
             <View>
-                <Text>
-                    Current: {' '}
-                    {isRunning && currentTask && !isBreak ? (
-                        currentTask.name
-                    ) : isBreak ? (
-                        'Break'
-                    ) : (
-                        'None'
-                    )}
+                <Text style={styles.linksURLs}>
+                    Current:{' '}
+                    {isRunning && currentTask && !isBreak
+                        ? currentTask.name
+                        : isBreak
+                          ? 'Break'
+                          : 'None'}
                 </Text>
             </View>
 
             <View style={styles.contentContainer}>
-                <Text style={styles.timerText}>{formatTime(timer)}</Text>
+                <Text style={styles.success}>{formatTime(timer)}</Text>
                 <TouchableOpacity
                     style={styles.button}
                     onPress={!isRunning ? startTimer : resetTimer}
                     disabled={selectedTask.length === 0}>
-                    <Text style={styles.buttonText}>{!isRunning ? 'Start' : 'Reset'}</Text>
+                    <Text style={styles.bodyCopy}>
+                        {!isRunning ? 'Start' : 'Reset'}
+                    </Text>
                 </TouchableOpacity>
             </View>
             <View></View>
@@ -306,10 +312,13 @@ function PomodoroStart() {
                         key={`${taskName.id}-${taskName.name}`}>
                         <View>
                             <RadioButton.Item
+                                labelStyle={styles.bodyCopy}
+                                uncheckedColor={styles.tagsPills.color}
+                                color={styles.errors.color}
                                 label={taskName.name}
                                 value={taskName.name}
                                 status={
-                                    (selectedTask === taskName.name || selectedTask === '')
+                                    selectedTask === taskName.name
                                         ? 'checked'
                                         : 'unchecked'
                                 }

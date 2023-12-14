@@ -14,6 +14,7 @@ import * as Notifications from 'expo-notifications';
 import {Notification} from 'expo-notifications';
 import React, {useEffect, useState} from 'react';
 import { View } from 'react-native';
+import { MyTheme, NavigationTheme, styles } from './src/styles';
 
 const Main = () => {
     React.useEffect(() => {
@@ -87,7 +88,7 @@ const Main = () => {
         paddingRight: insets.right,
       }}
     >
-            <NavigationContainer>
+            <NavigationContainer theme={NavigationTheme}>
                 <Tab.Navigator initialRouteName="Pomodoro">
                     <Tab.Screen name="Pomodoro" component={Pomodoro} />
 
@@ -105,7 +106,7 @@ const Main = () => {
 
 const App = () => {
     return(
-    <SafeAreaProvider>
+    <SafeAreaProvider style={styles.backgroundPane}>
     <Main/>
     </SafeAreaProvider>
     )

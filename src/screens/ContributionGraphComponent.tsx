@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Dimensions} from 'react-native';
 import {ContributionGraph} from 'react-native-chart-kit';
 import {ProcessedRecord} from './StatsData';
 
@@ -13,9 +13,10 @@ const ContributionGraphComponent: React.FC<ContributionGraphProps> = ({
     title,
 }) => {
     const dateFrequencyMap = new Map<string, number>();
-
+    const windowWidth = Dimensions.get('window').width;
     // Aggregate data based on the title
     let keyExtractor: (record: ProcessedRecord) => string;
+    let numDays = 60;
 
     switch (title.toLowerCase()) {
         case 'month':
@@ -25,6 +26,7 @@ const ContributionGraphComponent: React.FC<ContributionGraphProps> = ({
         default:
             // Default to using the full date for unknown titles
             keyExtractor = record => record.date.toISOString().split('T')[0];
+            numDays = 100;
     }
 
     // Aggregate data based on the keyExtractor
@@ -40,26 +42,30 @@ const ContributionGraphComponent: React.FC<ContributionGraphProps> = ({
             count,
         }),
     );
+    console.log(commitsData);
 
     // Custom chart configuration
     const chartConfig = {
-        backgroundGradientFrom: '#ffffff',
-        backgroundGradientTo: '#ffffff',
+            backgroundGradientFrom: 'rgb(17, 17, 27)',
+            backgroundGradientTo: 'rgb(17, 17, 27)',
         decimalPlaces: 0,
-        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-        labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        color: (opacity = 1) => `rgba(137, 180, 250, ${opacity})`,
+        labelColor: (opacity = 1) => `rgba(205, 214, 244, ${opacity})`,
     };
-
+  const tooltipDataAttrs = {
+    stroke: 'rgba(137, 180, 250, 1)',
+    strokeWidth: 2,
+  };
     return (
         <View>
-            <ContributionGraph
-                values={commitsData}
-                endDate={new Date()} // Use the current date as the end date
-                numDays={30} // Number of days to display
-                width={500}
-                height={220}
-                chartConfig={chartConfig}
-            />
+<ContributionGraph
+  values={commitsData}
+  endDate={new Date()}
+  numDays={numDays}
+  width={windowWidth}
+  height={220}
+  chartConfig={chartConfig}
+/>
         </View>
     );
 };
