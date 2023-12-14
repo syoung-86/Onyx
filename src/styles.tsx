@@ -2,6 +2,9 @@ import{StyleSheet} from "react-native";
 import { themeColors } from "./themes/catppuchin-mocha";
 
 export const styles = StyleSheet.create({
+  list: {
+    color: themeColors.Text,
+  },
   container : {
     flexDirection : 'row',
     alignItems : 'flex-start',
@@ -9,6 +12,15 @@ export const styles = StyleSheet.create({
     height : 'auto',            // Adjust the height as needed
     borderBottomWidth : 2,      // Add a border to underline the current page
     borderBottomColor : 'blue', // Color for the underline
+    backgroundColor: themeColors.Base,
+    borderColor: themeColors.Base,
+    opacity: 0,
+  },
+
+  calendar : {
+    backgroundColor: themeColors.Base,
+    borderColor: themeColors.Base,
+    opacity: 1,
   },
   contentContainer : {
     justifyContent : 'center',
@@ -22,6 +34,7 @@ export const styles = StyleSheet.create({
   buttonText : {
     fontSize : 16,
     fontWeight : 'bold',
+    color: themeColors.Text,
   },
 
   timerText : {
@@ -35,6 +48,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,
+    color: themeColors.Text,
   },
   // Background Elements
   backgroundPane: {
@@ -97,8 +111,8 @@ export const NavigationTheme = {
   dark: false,
   colors: {
     primary: themeColors.Blue,
-    background: themeColors.Surface0,
-    card: themeColors.Surface1,
+    background: themeColors.Crust,
+    card: themeColors.Base,
     text: themeColors.Text,
     border: themeColors.Subtext1,
     notification: themeColors.Red,
@@ -108,10 +122,38 @@ export const MyTheme = {
   dark: false,
   colors: {
     primary: themeColors.Blue,
-    background: themeColors.Surface0,
+    background: themeColors.Crust,
     card: themeColors.Surface1,
     text: themeColors.Text,
     border: themeColors.Subtext1,
     notification: themeColors.Red,
   },
 };
+
+export const CalendarTheme = {
+
+  backgroundColor: styles.backgroundPane.backgroundColor,
+  calendarBackground: styles.secondaryPanes.backgroundColor,
+  textSectionTitleColor: styles.mainHeadline.color,
+  textSectionTitleDisabledColor: styles.overlay1.backgroundColor,
+  selectedDayBackgroundColor: themeColors.Blue,
+  selectedDayTextColor: styles.bodyCopy.color,
+  todayTextColor: styles.success.color,
+  dayTextColor: styles.subtle.color,
+  textDisabledColor: styles.overlay1.backgroundColor,
+  dotColor: styles.overlay2.backgroundColor,
+  selectedDotColor: styles.overlay2.backgroundColor,
+  arrowColor: styles.overlay2.backgroundColor,
+  disabledArrowColor: styles.overlay1.backgroundColor,
+  monthTextColor: styles.overlay1.backgroundColor,
+  indicatorColor: styles.overlay2.backgroundColor,
+  textDayFontFamily: 'monospace',
+  textMonthFontFamily: 'monospace',
+  textDayHeaderFontFamily: 'monospace',
+  textDayFontWeight: '300', // Adjusted to match the expected type
+  textMonthFontWeight: 'bold',
+  textDayHeaderFontWeight: '300',
+  textDayFontSize: 16,
+  textMonthFontSize: 16,
+  textDayHeaderFontSize: 16,
+}

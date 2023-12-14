@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, FlatList, TouchableOpacity, Text, Alert} from 'react-native';
 import {List, Checkbox} from 'react-native-paper';
-import {styles} from '../styles';
+import {CalendarTheme, styles} from '../styles';
 import {
     GestureHandlerRootView,
     LongPressGestureHandler,
@@ -129,11 +129,9 @@ const TodoToday: React.FC = () => {
                         onChangeText={text => setNewTodo(text)}
                         value={newTodo}
                     />
-                    <TouchableOpacity onPress={addTodo}>
-                        <Text style={styles.buttonText}>Add New Todo</Text>
-                    </TouchableOpacity>
                 </View>
                 <Calendar
+                    theme={CalendarTheme}
                     onDayPress={day => {
                         console.log('selected day', day);
                         setSelected(day.dateString);
@@ -152,14 +150,22 @@ const TodoToday: React.FC = () => {
                     }}
                 />
 
+                    <TouchableOpacity onPress={addTodo}>
+                        <Text style={styles.buttonText}>Add New Todo</Text>
+                    </TouchableOpacity>
                 <FlatList
                     data={allTodos}
                     keyExtractor={item => item.id.toString()}
                     renderItem={({item}) => (
                         <List.Item
+                        titleStyle={styles.list}
+                        
                             title={item.name}
+                            
                             left={() => (
                                 <Checkbox
+                                color={styles.tagsPills.color}
+                                uncheckedColor={styles.subtle.color}
                                     status={
                                         item.completed ? 'checked' : 'unchecked'
                                     }

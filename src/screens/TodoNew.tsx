@@ -5,6 +5,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {TextInput} from 'react-native-paper';
 import {createTodoTable} from '../database';
 import {RouteProp} from '@react-navigation/native';
+import { CalendarTheme, styles } from '../styles';
 
 interface TodoNewProps {
     onRefresh?: () => void;
@@ -36,9 +37,10 @@ const TodoNew: React.FC<TodoNewProps> = ({onRefresh}) => {
                 <TextInput
                     placeholder="Title*"
                     onChangeText={text => setNewTodo(text)}
+                    style={styles.bodyCopy}
                 />
             </View>
-            <Text> Select a due date:</Text>
+            <Text style={styles.bodyCopy}> Select a due date:</Text>
             <Calendar
                 onDayPress={day => {
                     console.log('selected day', day);
@@ -50,9 +52,11 @@ const TodoNew: React.FC<TodoNewProps> = ({onRefresh}) => {
                         disableTouchEvent: true,
                     },
                 }}
+                style={styles.calendar}
+theme={CalendarTheme}
             />
             <TouchableOpacity onPress={createTodo}>
-                <Text>Create</Text>
+                <Text style={styles.bodyCopy}>Create</Text>
             </TouchableOpacity>
         </GestureHandlerRootView>
     );
