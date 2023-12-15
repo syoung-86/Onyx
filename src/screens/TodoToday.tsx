@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, FlatList, TouchableOpacity, Text, Alert} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {View, FlatList, TouchableOpacity, Text, Alert, Button} from 'react-native';
 import {List, Checkbox} from 'react-native-paper';
 import {CalendarTheme, styles} from '../styles';
 import {
@@ -41,7 +42,10 @@ const TodoToday: React.FC = () => {
     >([]);
     const todayFormatted = parseDateString();
     const [selected, setSelected] = useState<string>(todayFormatted);
-
+  const [isCalendarVisible, setCalendarVisibility] = useState(false);
+const toggleCalendarVisibility = () => {
+    setCalendarVisibility(!isCalendarVisible);
+  };
     const addTodo = () => {
         console.log('New todo:', newTodo);
         const originalSelected = selected; // Save the original value
@@ -123,13 +127,21 @@ const TodoToday: React.FC = () => {
     return (
         <GestureHandlerRootView>
             <View style={styles.contentContainer}>
-                <View>
+                    <View style={styles.container}> 
                     <TextInput
                         style={styles.input}
                         onChangeText={text => setNewTodo(text)}
                         value={newTodo}
                     />
+                    <TouchableOpacity onPress={addTodo}>
+                    <Icon name="plus" size={20} color={styles.buttonText.color}/>
+                    </TouchableOpacity>
                 </View>
+<TouchableOpacity onPress={toggleCalendarVisibility} style={styles.button}
+>
+        <Text style={styles.buttonText}>{isCalendarVisible ? 'Hide Calendar' : 'Show Calendar'}</Text>
+            </TouchableOpacity>
+            {isCalendarVisible  && (
                 <Calendar
                     theme={CalendarTheme}
                     onDayPress={day => {
@@ -148,11 +160,8 @@ const TodoToday: React.FC = () => {
                     onMonthChange={month => {
                         console.log('month changed', month);
                     }}
-                />
+                />)}
 
-                    <TouchableOpacity onPress={addTodo}>
-                        <Text style={styles.buttonText}>Add New Todo</Text>
-                    </TouchableOpacity>
                 <FlatList
                     data={allTodos}
                     keyExtractor={item => item.id.toString()}

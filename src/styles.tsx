@@ -1,5 +1,16 @@
-import{StyleSheet} from "react-native";
-import { themeColors } from "./themes/catppuchin-mocha";
+import{Appearance, StyleSheet} from "react-native";
+import { themeColors as darkTheme } from "./themes/Dark";
+import { themeColors as lightTheme } from "./themes/Light";
+
+const colorScheme = Appearance.getColorScheme();
+
+export var themeColors = darkTheme;
+if (colorScheme === 'dark'){
+    themeColors = darkTheme;
+} else {
+    themeColors = lightTheme;
+
+}
 
 export const styles = StyleSheet.create({
   list: {
@@ -7,14 +18,10 @@ export const styles = StyleSheet.create({
   },
   container : {
     flexDirection : 'row',
-    alignItems : 'flex-start',
-    justifyContent : 'center',
-    height : 'auto',            // Adjust the height as needed
-    borderBottomWidth : 2,      // Add a border to underline the current page
-    borderBottomColor : 'blue', // Color for the underline
-    backgroundColor: themeColors.Base,
+    dispaly: 'flex',
     borderColor: themeColors.Base,
-    opacity: 0,
+    textAlign: 'center',
+    alignItems: 'center',
   },
 
   calendar : {
@@ -25,16 +32,21 @@ export const styles = StyleSheet.create({
   contentContainer : {
     justifyContent : 'center',
     alignItems : 'center',
+    paddingTop: 50,
   },
   button : {
     padding : 10,
-    marginHorizontal : 10, // Adjust the spacing between buttons
-    color : 'gray',
+    color : themeColors.Text,
   },
   buttonText : {
     fontSize : 16,
     fontWeight : 'bold',
     color: themeColors.Text,
+    backgroundColor: themeColors.Mantle,
+    padding: 5,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: themeColors.Mantle,
   },
 
   timerText : {
@@ -44,11 +56,13 @@ export const styles = StyleSheet.create({
   input: {
     width: 200,
     height: 40,
-    borderColor: 'gray',
+    borderColor: themeColors.Surface0,
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,
+    paddingTop: 10,
     color: themeColors.Text,
+    backgroundColor: themeColors.Crust,
   },
   // Background Elements
   backgroundPane: {
@@ -157,3 +171,5 @@ export const CalendarTheme = {
   textMonthFontSize: 16,
   textDayHeaderFontSize: 16,
 }
+
+export const graphColors = Object.values(themeColors).slice(0,14);

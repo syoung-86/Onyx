@@ -1,18 +1,19 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import {ProcessedRecord, processAllData} from './StatsData';
 import PieChart from './PieChart';
-import ContributionGraphComponent from './ContributionGraphComponent';
 import React from 'react';
 import BarChartComponent from './BarChartComponent';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useFocusEffect } from '@react-navigation/native';
 
 const StatsAll = () => {
     const [data, setData] = useState<ProcessedRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+    useFocusEffect(
+        React.useCallback(() => {
         const fetchData = async () => {
             try {
                 const allData = await processAllData();
@@ -26,7 +27,8 @@ const StatsAll = () => {
         };
 
         fetchData();
-    }, []);
+        }, []),
+    );
 
     if (loading) {
         return <Text>Loading...</Text>; // You can customize the loading indicator

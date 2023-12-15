@@ -20,8 +20,8 @@ import EditTask from './EditTaskModal';
 import scheduleNotification, {cancelNotification} from '../LocalNotifaction';
 
 function PomodoroStart() {
-    const WORK_LENGTH = 5;
-    const BREAK_LENGTH = 3;
+    const WORK_LENGTH = 60 * 25;
+    const BREAK_LENGTH = 60 * 5;
     const [showStart, setShowStart] = useState(true);
     const [pomoNotifId, setPomoNotifId] = useState('');
     const [breakNotifId, setBreakNotifId] = useState('');
@@ -294,7 +294,7 @@ function PomodoroStart() {
                     style={styles.button}
                     onPress={!isRunning ? startTimer : resetTimer}
                     disabled={selectedTask.length === 0}>
-                    <Text style={styles.bodyCopy}>
+                    <Text style={styles.button}>
                         {!isRunning ? 'Start' : 'Reset'}
                     </Text>
                 </TouchableOpacity>
@@ -314,7 +314,7 @@ function PomodoroStart() {
                             <RadioButton.Item
                                 labelStyle={styles.bodyCopy}
                                 uncheckedColor={styles.tagsPills.color}
-                                color={styles.errors.color}
+                                color={styles.success.color}
                                 label={taskName.name}
                                 value={taskName.name}
                                 status={

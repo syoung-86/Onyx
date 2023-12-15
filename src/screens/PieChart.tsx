@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
 import { ProcessedRecord } from './StatsData';
-import { styles } from '../styles';
+import { styles, themeColors } from '../styles';
 import { getRandomColor, randomizeArray } from './StatsHelper';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -66,15 +66,15 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title }) => {
         width={420}
         height={300}
         chartConfig={{
-            backgroundGradientFrom: 'rgb(17, 17, 27)',
-            backgroundGradientTo: 'rgb(17, 17, 27)',
+            backgroundGradientFrom: themeColors.Mantle,
+            backgroundGradientTo: themeColors.Mantle,
 
           decimalPlaces: 2,
           color: getRandomColor,
           labelColor: getRandomColor,
         }}
         accessor="frequency"
-        backgroundColor="rgb(17, 17, 27)"
+        backgroundColor={themeColors.Mantle}
         paddingLeft="15"
         absolute
       />

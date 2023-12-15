@@ -6,13 +6,15 @@ import BarChartComponent from './BarChartComponent';
 import ProgressChartComponent from './ProgressRingComponent';
 import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
 import React from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 const StatsToday = () => {
     const [data, setData] = useState<ProcessedRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+    useFocusEffect(
+        React.useCallback(() => {
         const fetchData = async () => {
             try {
                 const todayData = await processTodayData();
@@ -26,7 +28,8 @@ const StatsToday = () => {
         };
 
         fetchData();
-    }, []);
+        }, []),
+    );
 
     if (loading) {
         return <Text>Loading...</Text>; // You can customize the loading indicator

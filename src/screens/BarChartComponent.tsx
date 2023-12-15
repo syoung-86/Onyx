@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Appearance} from 'react-native';
 import {BarChart} from 'react-native-chart-kit';
 import {ProcessedRecord} from './StatsData';
 import { Dimensions } from 'react-native';
+import { themeColors } from '../styles';
 
 interface ChartProps {
     data: ProcessedRecord[];
@@ -79,6 +80,17 @@ const BarChartComponent: React.FC<ChartProps> = ({data, title}) => {
         }),
     );
 
+    const colorScheme = Appearance.getColorScheme();
+
+        var labelColor = "rgba(205,214,244,1)";
+        var chartColor = "rgba(203, 166, 247,1)";
+    if (colorScheme === 'dark'){
+        labelColor = "rgba(205,214,244,1)";
+        chartColor = "rgba(136, 57, 239,1)";
+    } else {
+        labelColor = "rgba(76, 79, 105,1)";
+        chartColor = "rgba(203, 166, 247,1)";
+    }
     return (
         <View>
             <BarChart
@@ -96,11 +108,11 @@ const BarChartComponent: React.FC<ChartProps> = ({data, title}) => {
                 yAxisLabel=''
                 yAxisInterval={25} // Adjust as needed based on your requirement
                 chartConfig={{
-            backgroundGradientFrom: 'rgb(17, 17, 27)',
-            backgroundGradientTo: 'rgb(17, 17, 27)',
+            backgroundGradientFrom: themeColors.Mantle,
+            backgroundGradientTo: themeColors.Mantle,
                     decimalPlaces: 2,
-                    color: (opacity = 1) => `rgba(116, 199, 236, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(205, 214, 244, ${opacity})`,
+                    color: (opacity = 1) => themeColors.Blue,
+                    labelColor: (opacity = 1) => labelColor,
                     paddingRight: 10,
                 }}
             />

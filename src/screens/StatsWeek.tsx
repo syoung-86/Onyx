@@ -4,13 +4,15 @@ import {ProcessedRecord, processWeekData} from './StatsData';
 import PieChart from './PieChart';
 import BarChartComponent from './BarChartComponent';
 import React from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 const StatsWeek = () => {
     const [data, setData] = useState<ProcessedRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+    useFocusEffect(
+        React.useCallback(() => {
         const fetchData = async () => {
             try {
                 const weekData = await processWeekData();
@@ -24,7 +26,8 @@ const StatsWeek = () => {
         };
 
         fetchData();
-    }, []);
+        }, []),
+    );
 
     if (loading) {
         return <Text>Loading...</Text>; // You can customize the loading indicator

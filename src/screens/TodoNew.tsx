@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {Alert, Text, TouchableOpacity, View} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -31,16 +32,32 @@ const TodoNew: React.FC<TodoNewProps> = ({onRefresh}) => {
             // Handle the error here, e.g., show an alert
         }
     };
+
+  const [isCalendarVisible, setCalendarVisibility] = useState(false);
+const toggleCalendarVisibility = () => {
+    setCalendarVisibility(!isCalendarVisible);
+  };
     return (
         <GestureHandlerRootView>
-            <View>
+        <View style={styles.contentContainer}>
+            <View style={styles.container}>
                 <TextInput
                     placeholder="Title*"
                     onChangeText={text => setNewTodo(text)}
-                    style={styles.bodyCopy}
+                    style={styles.input}
                 />
+                <TouchableOpacity onPress={createTodo} style={styles.button}>
+                  <Icon name="plus" size={20} color={styles.buttonText.color}/>
+                </TouchableOpacity>
             </View>
-            <Text style={styles.bodyCopy}> Select a due date:</Text>
+
+<TouchableOpacity onPress={toggleCalendarVisibility} style={styles.button}
+>
+        <Text style={styles.buttonText}>{isCalendarVisible ? 'Hide Calendar' : 'Select A Due Date (Optional)'}</Text>
+            </TouchableOpacity>
+            {isCalendarVisible  && (
+                    <View>
+                    <Text style={styles.bodyCopy}>(Optional) Select a due date:</Text>
             <Calendar
                 onDayPress={day => {
                     console.log('selected day', day);
@@ -54,10 +71,8 @@ const TodoNew: React.FC<TodoNewProps> = ({onRefresh}) => {
                 }}
                 style={styles.calendar}
 theme={CalendarTheme}
-            />
-            <TouchableOpacity onPress={createTodo}>
-                <Text style={styles.bodyCopy}>Create</Text>
-            </TouchableOpacity>
+            /></View>)}
+            </View>
         </GestureHandlerRootView>
     );
 };

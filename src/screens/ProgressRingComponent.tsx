@@ -4,7 +4,7 @@ import {View} from 'react-native';
 import {ProgressChart} from 'react-native-chart-kit';
 import {processGoalData} from './StatsData';
 import {getRandomColor, randomizeArray} from './StatsHelper';
-import {styles} from '../styles';
+import {styles, themeColors} from '../styles';
 import { graphColors } from '../themes/catppuchin-mocha';
 
 const ProgressChartComponent = () => {
@@ -31,8 +31,8 @@ const [progressData, setProgressData] = useState({ labels: [], data: [] });
     );
 
     const chartConfig = {
-        backgroundGradientFrom: 'rgb(17, 17, 27)',
-        backgroundGradientTo: 'rgb(30, 30, 46)',
+            backgroundGradientFrom: themeColors.Mantle,
+            backgroundGradientTo: themeColors.Mantle,
         decimalPlaces: 2,
     color: (opacity = 1) => `rgba(137, 180, 250, ${opacity})`,
         propsForLabels: {

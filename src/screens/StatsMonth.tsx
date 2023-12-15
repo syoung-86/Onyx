@@ -4,13 +4,15 @@ import {ProcessedRecord, processMonthData} from './StatsData';
 import PieChart from './PieChart';
 import ContributionGraphComponent from './ContributionGraphComponent';
 import React from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 const StatsMonth = () => {
     const [data, setData] = useState<ProcessedRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+    useFocusEffect(
+        React.useCallback(() => {
         const fetchData = async () => {
             try {
                 const monthData = await processMonthData();
@@ -24,7 +26,8 @@ const StatsMonth = () => {
         };
 
         fetchData();
-    }, []);
+        }, []),
+    );
 
     if (loading) {
         return <Text>Loading...</Text>; // You can customize the loading indicator

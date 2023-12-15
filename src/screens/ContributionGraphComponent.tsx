@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, Dimensions} from 'react-native';
+import {View, Text, Dimensions, Appearance} from 'react-native';
 import {ContributionGraph} from 'react-native-chart-kit';
 import {ProcessedRecord} from './StatsData';
+import { themeColors } from '../styles';
 
 interface ContributionGraphProps {
     data: ProcessedRecord[];
@@ -43,14 +44,22 @@ const ContributionGraphComponent: React.FC<ContributionGraphProps> = ({
         }),
     );
     console.log(commitsData);
+const colorScheme = Appearance.getColorScheme();
+
+    var labelColor = "rgba(205,214,244,1)";
+if (colorScheme === 'dark'){
+    labelColor = "rgba(205,214,244,1)";
+} else {
+    labelColor = "rgba(76, 79, 105,1)";
+}
 
     // Custom chart configuration
     const chartConfig = {
-            backgroundGradientFrom: 'rgb(17, 17, 27)',
-            backgroundGradientTo: 'rgb(17, 17, 27)',
+            backgroundGradientFrom: themeColors.Mantle,
+            backgroundGradientTo: themeColors.Mantle,
         decimalPlaces: 0,
         color: (opacity = 1) => `rgba(137, 180, 250, ${opacity})`,
-        labelColor: (opacity = 1) => `rgba(205, 214, 244, ${opacity})`,
+        labelColor: () => labelColor,
     };
   const tooltipDataAttrs = {
     stroke: 'rgba(137, 180, 250, 1)',

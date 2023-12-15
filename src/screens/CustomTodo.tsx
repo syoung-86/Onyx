@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {View, FlatList, TouchableOpacity, Text, Alert} from 'react-native';
-import {List, Checkbox} from 'react-native-paper';
-import {styles} from '../styles';
+import React, { useEffect, useState } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, FlatList, TouchableOpacity, Text, Alert } from 'react-native';
+import { List, Checkbox } from 'react-native-paper';
+import { styles } from '../styles';
 import {
     GestureHandlerRootView,
     ScrollView,
@@ -17,17 +18,18 @@ import {
     updateRecord,
 } from '../database';
 import Markdown from '@ronradtke/react-native-markdown-display';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+
 
 interface TodoScreenProps {
     tableName: string;
     onRefresh?: () => void;
 }
 
-const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
+const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
     const [newTodo, setNewTodo] = useState('');
     const [allTodos, setAllTodos] = useState<
-        {id: number; name: string; completed: boolean}[]
+        { id: number; name: string; completed: boolean }[]
     >([]);
     const [notes, setNotes] = useState('');
     const [dueDate, setDueDate] = useState('');
@@ -38,10 +40,10 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
 
     const addTodo = async () => {
         console.log('New todo:', newTodo);
-        await createRecord(todoTable, {name: newTodo, completed: false});
+        await createRecord(todoTable, { name: newTodo, completed: false });
         const updatedTodos = await readRecords(todoTable);
         setAllTodos(
-            updatedTodos as {id: number; name: string; completed: boolean}[],
+            updatedTodos as { id: number; name: string; completed: boolean }[],
         );
         setNewTodo('');
     };
@@ -59,7 +61,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
     const toggleTodo = (id: number) => {
         const updatedTodos = allTodos.map(todo => {
             if (todo.id === id) {
-                const updatedTodo = {...todo, completed: !todo.completed};
+                const updatedTodo = { ...todo, completed: !todo.completed };
                 return updatedTodo;
             } else {
                 return todo;
@@ -99,7 +101,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
             ],
         );
     };
-    const showTodoContextMenu = (todo: {id: number; name: string}) => {
+    const showTodoContextMenu = (todo: { id: number; name: string }) => {
         Alert.alert('Todo Options', 'Select an action for this todo:', [
             {
                 text: 'Delete Todo',
@@ -116,7 +118,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
         ]);
     };
 
-    const deleteTodo = (todo: {id: number; name: string}) => {
+    const deleteTodo = (todo: { id: number; name: string }) => {
         setAllTodos(prevTodos => prevTodos.filter(t => t.id !== todo.id));
 
         // Delete the todo from the database
@@ -156,20 +158,18 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
 
     return (
         <GestureHandlerRootView>
-            <ScrollView>
+            <ScrollView >
+            <View style={styles.contentContainer}> 
+                    <Text style={styles.bodyCopy}>{dueDate}</Text>
                 <View>
-                    <Text>{dueDate}</Text>
-                </View>
-
-                <View>
-                    <View>
+                    <View style={styles.container}> 
                         <TextInput
                             style={styles.input}
                             onChangeText={text => setNewTodo(text)}
                             value={newTodo}
                         />
-                        <TouchableOpacity onPress={addTodo}>
-                            <Text style={styles.buttonText}>Add New Todo</Text>
+                        <TouchableOpacity onPress={addTodo} style={styles.button}>
+                            <Icon name="plus" size={20} color={styles.buttonText.color}/>
                         </TouchableOpacity>
                     </View>
 
@@ -177,7 +177,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
                         scrollEnabled={false}
                         data={allTodos}
                         keyExtractor={item => item.id.toString()}
-                        renderItem={({item}) => (
+                        renderItem={({ item }) => (
                             <List.Item
                                 title={item.name}
                                 left={() => (
@@ -226,6 +226,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({tableName, onRefresh}) => {
                     <TouchableOpacity onPress={showNotesContextMenu}>
                         <Text style={styles.buttonText}>Delete</Text>
                     </TouchableOpacity>
+                </View>
                 </View>
             </ScrollView>
         </GestureHandlerRootView>

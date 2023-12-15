@@ -1,4 +1,4 @@
-import {graphColors} from '../themes/catppuchin-mocha';
+import {graphColors} from '../styles';
 import seedrandom from 'seedrandom';
 
 export function getRandomColor() {
