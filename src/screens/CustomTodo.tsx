@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { View, FlatList, TouchableOpacity, Text, Alert } from 'react-native';
 import { List, Checkbox } from 'react-native-paper';
-import { styles } from '../styles';
+import { markdownStyles, styles } from '../styles';
 import {
     GestureHandlerRootView,
     ScrollView,
@@ -159,12 +159,11 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
     return (
         <GestureHandlerRootView>
             <ScrollView >
-            <View style={styles.contentContainer}> 
+            <View> 
                     <Text style={styles.bodyCopy}>{dueDate}</Text>
-                <View>
                     <View style={styles.container}> 
                         <TextInput
-                            style={styles.input}
+                            style={styles.textInput}
                             onChangeText={text => setNewTodo(text)}
                             value={newTodo}
                         />
@@ -179,6 +178,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                         keyExtractor={item => item.id.toString()}
                         renderItem={({ item }) => (
                             <List.Item
+                                titleStyle={styles.list}
                                 title={item.name}
                                 left={() => (
                                     <Checkbox
@@ -194,7 +194,6 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                             />
                         )}
                     />
-                </View>
                 <View>
                     <View>
                         {isEditingNotes ? (
@@ -203,6 +202,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                                 numberOfLines={10}
                                 onChangeText={text => setNotes(text)}
                                 value={notes}
+                                style={styles.textInput}
                             />
                         ) : (
                             <View>
@@ -211,7 +211,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                                         Edit Notes
                                     </Text>
                                 </TouchableOpacity>
-                                <Markdown>{notes}</Markdown>
+                                <Markdown style={markdownStyles}>{notes}</Markdown>
                             </View>
                         )}
 

@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import TodoToday from './TodoToday';
 import TodoNew from './TodoNew';
 import {readRecords} from '../database';
 import CustomTodo from './CustomTodo';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import { styles, themeColors } from '../styles';
 
 const Drawer = createDrawerNavigator();
 
@@ -23,7 +25,9 @@ function TodoNavigator() {
         setRefresh(prev => !prev);
     };
     return (
-        <Drawer.Navigator initialRouteName="Daily">
+        <Drawer.Navigator initialRouteName="Daily" 
+        screenOptions={{headerTintColor: styles.bodyCopy.color}}
+        >
             <Drawer.Screen name="Create a new Todo">
                 {() => <TodoNew onRefresh={handleRefresh} />}
             </Drawer.Screen>
