@@ -182,6 +182,8 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                                 title={item.name}
                                 left={() => (
                                     <Checkbox
+                                color={styles.success.color}
+                                uncheckedColor={styles.subtle.color}
                                         status={
                                             item.completed
                                                 ? 'checked'

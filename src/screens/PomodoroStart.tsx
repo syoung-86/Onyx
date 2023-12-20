@@ -145,7 +145,6 @@ function PomodoroStart() {
                 setShowStart(false);
             } else if (remainingBreakTime > 0) {
                 setIsBreak(true);
-                console.log('BREAK:', isBreak);
                 setTimer(remainingBreakTime);
             } else {
                 setIsRunning(false);

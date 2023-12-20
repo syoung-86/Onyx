@@ -130,11 +130,13 @@ function PomodoroNew() {
                 <TextInput
                     style={styles.input}
                     placeholder="Task Name"
+                    placeholderTextColor={styles.subtle.color}
                     onChangeText={text => setNewTaskName(text)}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Goal"
+                    placeholderTextColor={styles.subtle.color}
                     keyboardType="numeric"
                     value={goal}
                     onChangeText={text => setGoal(text)}

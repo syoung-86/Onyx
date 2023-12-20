@@ -1,18 +1,18 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Pomodoro from './src/screens/Pomodoro';
 import TodoNavigator from './src/screens/TodoNavigator';
 import StatsNavigator from './src/screens/StatsNavigator';
-import {initDatabase} from './src/database';
-import {SafeAreaProvider, useSafeAreaInsets} from 'react-native-safe-area-context';
+import { initDatabase } from './src/database';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
     scheduleNotification,
     setupNotificationChannel,
 } from './src/LocalNotifaction';
-import {PermissionStatus} from 'expo-modules-core';
+import { PermissionStatus } from 'expo-modules-core';
 import * as Notifications from 'expo-notifications';
-import {Notification} from 'expo-notifications';
-import React, {useEffect, useState} from 'react';
+import { Notification } from 'expo-notifications';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { MyTheme, NavigationTheme, styles } from './src/styles';
 
@@ -40,27 +40,27 @@ const Main = () => {
                 'Todo notifications',
             );
         };
-(async () => {
-      try {
-        console.log('Setting up channels and scheduling notification...');
-        await setupChannels();
-        console.log('Notification channels setup  successfully!');
-      } catch (error) {
-        console.error('Error setting up channels:', error);
-      }
-    })();
+        (async () => {
+            try {
+                console.log('Setting up channels and scheduling notification...');
+                await setupChannels();
+                console.log('Notification channels setup  successfully!');
+            } catch (error) {
+                console.error('Error setting up channels:', error);
+            }
+        })();
         initDatabase();
     }, []);
     const [notificationPermissions, setNotificationPermissions] =
         useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
 
     const handleNotification = (notification: Notification) => {
-        const {title} = notification.request.content;
+        const { title } = notification.request.content;
         console.warn(title);
     };
 
     const requestNotificationPermissions = async () => {
-        const {status} = await Notifications.requestPermissionsAsync();
+        const { status } = await Notifications.requestPermissionsAsync();
         setNotificationPermissions(status);
         return status;
     };
@@ -76,18 +76,18 @@ const Main = () => {
         return () => listener.remove();
     }, [notificationPermissions]);
     const Tab = createMaterialTopTabNavigator();
-  const insets = useSafeAreaInsets();
+    const insets = useSafeAreaInsets();
     return (
-            <View
-      style={{
-        flex: 1,
-        justifyContent: 'space-between',
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-      }}
-    >
+        <View
+            style={{
+                flex: 1,
+                justifyContent: 'space-between',
+                paddingTop: insets.top,
+                paddingBottom: insets.bottom,
+                paddingLeft: insets.left,
+                paddingRight: insets.right,
+            }}
+        >
             <NavigationContainer theme={NavigationTheme}>
                 <Tab.Navigator initialRouteName="Pomodoro">
                     <Tab.Screen name="Pomodoro" component={Pomodoro} />
@@ -95,20 +95,20 @@ const Main = () => {
                     <Tab.Screen
                         name="TodoNavigator"
                         component={TodoNavigator}
-                        options={{tabBarLabel: 'Todo'}}
+                        options={{ tabBarLabel: 'Todo' }}
                     />
                     <Tab.Screen name="Stats" component={StatsNavigator} />
                 </Tab.Navigator>
             </NavigationContainer>
-            </View>
+        </View>
     );
 };
 
 const App = () => {
-    return(
-    <SafeAreaProvider style={styles.backgroundPane}>
-    <Main/>
-    </SafeAreaProvider>
+    return (
+        <SafeAreaProvider style={styles.backgroundPane}>
+            <Main />
+        </SafeAreaProvider>
     )
 }
 export default App;

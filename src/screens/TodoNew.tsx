@@ -45,6 +45,7 @@ const toggleCalendarVisibility = () => {
                     placeholder="Title*"
                     onChangeText={text => setNewTodo(text)}
                     style={styles.input}
+                    placeholderTextColor={styles.subtle.color}
                 />
                 <TouchableOpacity onPress={createTodo} style={styles.button}>
                   <Icon name="plus" size={20} color={styles.buttonText.color}/>

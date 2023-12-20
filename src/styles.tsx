@@ -71,10 +71,18 @@ export const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 10,
     color: themeColors.Text,
-    backgroundColor: themeColors.Crust,
+    backgroundColor: themeColors.Base,
   },
   textInput: {
+    width: 200,
+    height: 40,
+    borderColor: themeColors.Surface0,
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingLeft: 10,
+    paddingTop: 10,
     color: themeColors.Text,
+    backgroundColor: themeColors.Base,
   },
   // Background Elements
   backgroundPane: {
@@ -226,7 +234,7 @@ export const markdownStyles =StyleSheet.create( {
 
   // Horizontal Rule
   hr: {
-    backgroundColor: '#000000',
+    backgroundColor: themeColors.Overlay0,
     height: 1,
   },
 
@@ -307,7 +315,7 @@ export const markdownStyles =StyleSheet.create( {
   // Tables
   table: {
     borderWidth: 1,
-    borderColor: '#000000',
+    borderColor: themeColors.Overlay2,
     borderRadius: 3,
   },
   thead: {},
@@ -318,7 +326,7 @@ export const markdownStyles =StyleSheet.create( {
   },
   tr: {
     borderBottomWidth: 1,
-    borderColor: '#000000',
+    borderColor: themeColors.Overlay2,
     flexDirection: 'row',
   },
   td: {
@@ -332,7 +340,7 @@ export const markdownStyles =StyleSheet.create( {
   },
   blocklink: {
     flex: 1,
-    borderColor: '#000000',
+    borderColor: themeColors.Blue,
     borderBottomWidth: 1,
   },
 
