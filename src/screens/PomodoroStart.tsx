@@ -20,8 +20,8 @@ import EditTask from './EditTaskModal';
 import scheduleNotification, {cancelNotification} from '../LocalNotifaction';
 
 function PomodoroStart() {
-    const WORK_LENGTH = 60 * 25;
-    const BREAK_LENGTH = 60 * 5;
+    const WORK_LENGTH = 5;
+    const BREAK_LENGTH = 3;
     const [showStart, setShowStart] = useState(true);
     const [pomoNotifId, setPomoNotifId] = useState('');
     const [breakNotifId, setBreakNotifId] = useState('');

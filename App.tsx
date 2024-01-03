@@ -13,8 +13,9 @@ import { PermissionStatus } from 'expo-modules-core';
 import * as Notifications from 'expo-notifications';
 import { Notification } from 'expo-notifications';
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
-import { MyTheme, NavigationTheme, styles } from './src/styles';
+import { View, StatusBar } from 'react-native';
+import { MyTheme, NavigationTheme, styles, themeColors } from './src/styles';
+import { Text } from 'react-native';
 
 const Main = () => {
     React.useEffect(() => {
@@ -81,13 +82,13 @@ const Main = () => {
         <View
             style={{
                 flex: 1,
-                justifyContent: 'space-between',
                 paddingTop: insets.top,
-                paddingBottom: insets.bottom,
-                paddingLeft: insets.left,
-                paddingRight: insets.right,
             }}
         >
+ <View style={{ backgroundColor: themeColors.Mantle}}>
+      <StatusBar hidden={false} backgroundColor={themeColors.Mantle} translucent={true} />
+      {/* Your other components/content go here */}
+    </View>
             <NavigationContainer theme={NavigationTheme}>
                 <Tab.Navigator initialRouteName="Pomodoro">
                     <Tab.Screen name="Pomodoro" component={Pomodoro} />
@@ -106,7 +107,7 @@ const Main = () => {
 
 const App = () => {
     return (
-        <SafeAreaProvider style={styles.backgroundPane}>
+        <SafeAreaProvider>
             <Main />
         </SafeAreaProvider>
     )

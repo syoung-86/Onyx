@@ -10,9 +10,11 @@ const Tab = createBottomTabNavigator();
 
 const Pomodoro = () => {
     return (
-        <Tab.Navigator initialRouteName="PomodoroStart">
+        <Tab.Navigator initialRouteName="PomodoroStart"  screenOptions={{
+    headerShown: false
+  }}>
             <Tab.Screen
-                name="PomodoroStart"
+                name="Start"
                 component={PomodoroStart}
                 options={{
                     tabBarLabel: 'Start',
@@ -22,7 +24,7 @@ const Pomodoro = () => {
                 }}
             />
             <Tab.Screen
-                name="PomodoroNew"
+                name="New"
                 component={PomodoroNew}
                 options={{
                     tabBarLabel: 'New',

@@ -7,6 +7,7 @@ import ProgressChartComponent from './ProgressRingComponent';
 import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
 import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { markdownStyles } from '../styles';
 
 const StatsToday = () => {
     const [data, setData] = useState<ProcessedRecord[]>([]);
@@ -19,6 +20,7 @@ const StatsToday = () => {
             try {
                 const todayData = await processTodayData();
                 setData(todayData);
+                console.log("TODAY DATA ",todayData);
             } catch (error) {
                 console.error('Error fetching stats data:', error);
                 setError('Error fetching data. Please try again.');
@@ -32,7 +34,7 @@ const StatsToday = () => {
     );
 
     if (loading) {
-        return <Text>Loading...</Text>; // You can customize the loading indicator
+        return <Text style={markdownStyles.heading1}>Loading...</Text>; // You can customize the loading indicator
     }
 
     if (error) {

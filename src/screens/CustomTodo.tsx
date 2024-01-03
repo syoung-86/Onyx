@@ -19,6 +19,7 @@ import {
 } from '../database';
 import Markdown from '@ronradtke/react-native-markdown-display';
 import { useNavigation } from '@react-navigation/native';
+import { Linking } from 'react-native';
 
 
 interface TodoScreenProps {
@@ -155,7 +156,14 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                 console.error('Error fetching custom todo:', error),
             );
     }, []);
+    const onLinkPress = (url: string) => {
+    if (url) {
+        return true
+     } else {
+         return false
+     }
 
+    }
     return (
         <GestureHandlerRootView>
             <ScrollView >
@@ -201,7 +209,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                         {isEditingNotes ? (
                             <TextInput
                                 multiline
-                                numberOfLines={10}
+                                numberOfLines={50}
                                 onChangeText={text => setNotes(text)}
                                 value={notes}
                                 style={styles.textInput}
@@ -213,7 +221,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                                         Edit Notes
                                     </Text>
                                 </TouchableOpacity>
-                                <Markdown style={markdownStyles}>{notes}</Markdown>
+                                <Markdown onLinkPress={onLinkPress}style={markdownStyles}>{notes}</Markdown>
                             </View>
                         )}
 

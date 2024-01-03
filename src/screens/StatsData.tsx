@@ -21,9 +21,9 @@ const parseDateStringToDate = (dateString: string): Date => {
     const dateComponents = dateString.split(/[\s,/:]+/);
 
     return new Date(
-        parseInt(dateComponents[2]), // Year
-        parseInt(dateComponents[0]) - 1, // Month (0-based)
-        parseInt(dateComponents[1]), // Day
+        parseInt(dateComponents[0]) , // Year
+        parseInt(dateComponents[1]) - 1, // Month (0-based)
+        parseInt(dateComponents[2]), // Day
         parseInt(dateComponents[3]), // Hours
         parseInt(dateComponents[4]), // Minutes
         parseInt(dateComponents[5]), // Seconds
@@ -68,7 +68,6 @@ export const processTodayData = async (): Promise<ProcessedRecord[]> => {
         today.getDate() + 1,
     );
     const todayData = filterRecordsByDateRange(data, startOfDay, endOfDay);
-    //console.log('process today data: ', todayData);
     return todayData;
 };
 

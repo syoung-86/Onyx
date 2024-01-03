@@ -5,7 +5,7 @@ import {
     GestureHandlerRootView,
     State,
 } from 'react-native-gesture-handler';
-import {styles} from '../styles';
+import {markdownStyles, styles} from '../styles';
 import {createRecord, readRecords, deleteRecord} from '../database';
 import {useFocusEffect} from '@react-navigation/native';
 
@@ -106,7 +106,7 @@ function PomodoroNew() {
                         <View>
                             <TouchableOpacity
                                 onPress={() => onPress(taskName.name)}>
-                                <Text>{taskName.name}</Text>
+                                <Text style={styles.bodyCopy}>{taskName.name}</Text>
                             </TouchableOpacity>
                         </View>
                     </LongPressGestureHandler>
@@ -143,10 +143,10 @@ function PomodoroNew() {
                 />
                 <View>
                     <TouchableOpacity onPress={() => handleGoalChange(1)}>
-                        <Text>+</Text>
+                        <Text style={styles.bodyCopy}>+</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleGoalChange(-1)}>
-                        <Text>-</Text>
+                        <Text style={styles.bodyCopy}>-</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -156,7 +156,7 @@ function PomodoroNew() {
             </TouchableOpacity>
 
             <View>
-                <Text>Tasks:</Text>
+                <Text style={markdownStyles.heading3}>Tasks:</Text>
                 <TaskList
                     taskNames={taskNames}
                     onLongPress={showContextMenu}

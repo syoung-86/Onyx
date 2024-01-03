@@ -173,7 +173,7 @@ const toggleCalendarVisibility = () => {
                             
                             left={() => (
                                 <Checkbox
-                                color={styles.tagsPills.color}
+                                color={styles.success.color}
                                 uncheckedColor={styles.subtle.color}
                                     status={
                                         item.completed ? 'checked' : 'unchecked'

@@ -28,7 +28,7 @@ function TodoNavigator() {
         <Drawer.Navigator initialRouteName="Daily" 
         screenOptions={{headerTintColor: styles.bodyCopy.color}}
         >
-            <Drawer.Screen name="Create a new Todo">
+            <Drawer.Screen name="New">
                 {() => <TodoNew onRefresh={handleRefresh} />}
             </Drawer.Screen>
             <Drawer.Screen name="Daily" component={TodoToday} />

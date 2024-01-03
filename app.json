@@ -30,6 +30,10 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "androidStatusBar": {
+      "translucent": true,
+      "barStyle": "dark-content",
+    },
     "extra": {
       "eas": {
         "projectId": "3589c166-491d-46e3-b326-dc50662b9255"

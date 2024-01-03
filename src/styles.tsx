@@ -5,16 +5,6 @@ import { themeColors as lightTheme } from "./themes/Light";
 const colorScheme = Appearance.getColorScheme();
 
 export var themeColors = darkTheme;
-console.log("COLOR SCHEME: ", colorScheme);
-console.log("COLOR SCHEME: ", colorScheme);
-console.log("COLOR SCHEME: ", colorScheme);
-console.log("COLOR SCHEME: ", colorScheme);
-console.log("COLOR SCHEME: ", colorScheme);
-console.log("COLOR SCHEME: ", colorScheme);
-console.log("COLOR SCHEME: ", colorScheme);
-console.log("COLOR SCHEME: ", colorScheme);
-console.log("COLOR SCHEME: ", colorScheme);
-console.log("COLOR SCHEME: ", colorScheme);
 if (colorScheme === 'dark'){
     themeColors = darkTheme;
 } else {
@@ -56,6 +46,9 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: themeColors.Mantle,
+    flex: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   timerText : {
@@ -86,7 +79,8 @@ export const styles = StyleSheet.create({
   },
   // Background Elements
   backgroundPane: {
-    backgroundColor: themeColors.Base,
+    backgroundColor: themeColors.Text,
+    color: themeColors.Text,
   },
   secondaryPanes: {
     backgroundColor: themeColors.Crust, // or Mantle for a different background
@@ -205,31 +199,37 @@ export const markdownStyles =StyleSheet.create( {
     flexDirection: 'row',
     fontSize: 32,
     color: themeColors.Text,
+    fontWeight : 'bold',
   },
   heading2: {
     flexDirection: 'row',
     fontSize: 24,
     color: themeColors.Text,
+    fontWeight : 'bold',
   },
   heading3: {
     flexDirection: 'row',
     fontSize: 18,
     color: themeColors.Text,
+    fontWeight : 'bold',
   },
   heading4: {
     flexDirection: 'row',
     fontSize: 16,
     color: themeColors.Text,
+    fontWeight : 'bold',
   },
   heading5: {
     flexDirection: 'row',
     fontSize: 13,
     color: themeColors.Text,
+    fontWeight : 'bold',
   },
   heading6: {
     flexDirection: 'row',
     fontSize: 11,
     color: themeColors.Text,
+    fontWeight : 'bold',
   },
 
   // Horizontal Rule
@@ -241,12 +241,15 @@ export const markdownStyles =StyleSheet.create( {
   // Emphasis
   strong: {
     fontWeight: 'bold',
+    color: themeColors.Text,
   },
   em: {
     fontStyle: 'italic',
+    color: themeColors.Text,
   },
   s: {
     textDecorationLine: 'line-through',
+    color: themeColors.Text,
   },
 
   // Blockquotes
@@ -256,6 +259,7 @@ export const markdownStyles =StyleSheet.create( {
     borderLeftWidth: 4,
     marginLeft: 5,
     paddingHorizontal: 5,
+    color: themeColors.Text,
   },
 
   // Lists
@@ -264,6 +268,7 @@ export const markdownStyles =StyleSheet.create( {
   list_item: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    color: themeColors.Text,
   },
   // @pseudo class, does not have a unique render rule
   bullet_list_icon: {
@@ -292,6 +297,7 @@ export const markdownStyles =StyleSheet.create( {
     padding: 10,
     borderRadius: 4,
     fontFamily: 'monospace',
+    color: themeColors.Text,
   },
   code_block: {
     borderWidth: 1,
@@ -301,6 +307,7 @@ export const markdownStyles =StyleSheet.create( {
     borderRadius: 4,
     fontFamily: 'monospace',
     colorScheme: themeColors,
+    color: themeColors.Text,
   },
   fence: {
     borderWidth: 1,
@@ -359,6 +366,7 @@ export const markdownStyles =StyleSheet.create( {
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
+    color: themeColors.Text,
     width: '100%',
   },
   hardbreak: {

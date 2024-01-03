@@ -14,7 +14,7 @@ function StatsNavigator() {
     return (
         <Tab.Navigator initialRouteName="StatsToday">
             <Tab.Screen
-                name="StatsToday"
+                name="Today"
                 component={StatsToday}
                 options={{
                     tabBarLabel: 'day',
@@ -24,7 +24,7 @@ function StatsNavigator() {
                 }}
             />
             <Tab.Screen
-                name="StatsWeek"
+                name="Week"
                 component={StatsWeek}
                 options={{
                     tabBarLabel: 'Week',
@@ -34,7 +34,7 @@ function StatsNavigator() {
                 }}
             />
             <Tab.Screen
-                name="StatsMonth"
+                name="Month"
                 component={StatsMonth}
                 options={{
                     tabBarLabel: 'Month',
@@ -45,7 +45,7 @@ function StatsNavigator() {
             />
 
             <Tab.Screen
-                name="StatsAll"
+                name="All"
                 component={StatsAll}
                 options={{
                     tabBarLabel: 'All',
