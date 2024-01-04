@@ -127,17 +127,6 @@ const MarkdownToolbar = ({ onInsert }) => (
   </View>
 );
     useEffect(() => {
-        if (isEditingNotes) {
-        navigation.setOptions({
-          headerTitle: () => <MarkdownToolbar onInsert={insertMarkdownSyntax} />,
-        });
-        } else {
-            navigation.setOptions({
-          headerTitle: () => <Text style={markdownStyles.heading1}>{tableName}</Text>,
-            });
-        }
-    }, [isEditingNotes]);
-    useEffect(() => {
       const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
         setKeyboardVisible(true);
       });
@@ -306,8 +295,10 @@ const MarkdownToolbar = ({ onInsert }) => (
     return (
         <GestureHandlerRootView>
             <ScrollView>
+            <View style={styles.stickyHeader}>
+      {isEditingNotes && <MarkdownToolbar onInsert={insertMarkdownSyntax} />}
+            </View>
             <View> 
-
         <View style={styles.contentContainer}>
                     <Text style={styles.bodyCopy}>{dueDate}</Text>
                     <View style={styles.container}> 

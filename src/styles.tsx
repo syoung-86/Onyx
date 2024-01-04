@@ -16,6 +16,12 @@ export const styles = StyleSheet.create({
   list: {
     color: themeColors.Text,
   },
+  stickyHeader: {
+      position: 'absolute',
+      top: 0,
+      flex: 1,
+      zIndex: 999,
+  },
   container : {
     flexDirection : 'row',
     display: 'flex',
