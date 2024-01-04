@@ -43,6 +43,7 @@
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.9.0",
+    "react-native-toast-message": "^2.2.0",
     "react-native-vector-icons": "^10.0.2",
     "seedrandom": "^3.0.5",
     "typescript": "^5.1.3"

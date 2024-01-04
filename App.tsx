@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Pomodoro from './src/screens/Pomodoro';
@@ -12,10 +13,11 @@ import {
 import { PermissionStatus } from 'expo-modules-core';
 import * as Notifications from 'expo-notifications';
 import { Notification } from 'expo-notifications';
-import React, { useEffect, useState } from 'react';
 import { View, StatusBar } from 'react-native';
 import { MyTheme, NavigationTheme, styles, themeColors } from './src/styles';
 import { Text } from 'react-native';
+import Toast, {BaseToast} from 'react-native-toast-message';
+import { toastConfig } from './src/ToastHelper';
 
 const Main = () => {
     React.useEffect(() => {
@@ -87,7 +89,6 @@ const Main = () => {
         >
  <View style={{ backgroundColor: themeColors.Mantle}}>
       <StatusBar hidden={false} backgroundColor={themeColors.Mantle} translucent={true} />
-      {/* Your other components/content go here */}
     </View>
             <NavigationContainer theme={NavigationTheme}>
                 <Tab.Navigator initialRouteName="Pomodoro">
@@ -101,6 +102,7 @@ const Main = () => {
                     <Tab.Screen name="Stats" component={StatsNavigator} />
                 </Tab.Navigator>
             </NavigationContainer>
+        <Toast config={toastConfig}/>
         </View>
     );
 };

@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Linking, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { View, FlatList, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, FlatList, Text, Alert, KeyboardAvoidingView } from 'react-native';
 import { List, Checkbox } from 'react-native-paper';
 import { markdownStyles, styles } from '../styles';
 import {
     GestureHandlerRootView,
     ScrollView,
     TextInput,
+    TouchableOpacity,
 } from 'react-native-gesture-handler';
 import {
     createRecord,
@@ -19,8 +21,8 @@ import {
 } from '../database';
 import Markdown from '@ronradtke/react-native-markdown-display';
 import { useNavigation } from '@react-navigation/native';
-import { Linking } from 'react-native';
 import showSuccessToast from '../ToastHelper';
+import { themeColors } from '../styles';
 
 
 interface TodoScreenProps {
@@ -39,6 +41,141 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
     const [isEditingNotes, setIsEditingNotes] = useState(false);
     const todoTable = tableName + 'Todos';
     const navigation = useNavigation();
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+    const [selection, setSelection] = useState({ start: 0, end: 0 });
+    const inputRef = useRef(null);
+
+
+
+const MarkdownToolbar = ({ onInsert }) => (
+  <View style={styles.markdownToolbar}>
+    <TouchableOpacity onPress={() => onInsert('**', '**')}>
+      <View style={styles.toolbarItem}>
+        <Icon name="bold" size={15} color={styles.buttonText.color}/>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('*', '*')}>
+      <View style={styles.toolbarItem}>
+        <Icon name="italic" size={15} color={styles.buttonText.color}/>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('# ', '')}>
+      <View style={styles.toolbarItem}>
+        <Text style={styles.toolbarButton}>H1</Text>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('## ', '')}>
+      <View style={styles.toolbarItem}>
+        <Text style={styles.toolbarButton}>H2</Text>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('\n---\n', '')}>
+      <View style={styles.toolbarItem}>
+        <Icon name="minus" size={15} color={styles.buttonText.color}/>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('~~', '~~')}>
+      <View style={styles.toolbarItem}>
+        <Text style={styles.strikethrough}>S</Text>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('> ', '')}>
+      <View style={styles.toolbarItem}>
+        <Icon name="indent" size={15} color={styles.buttonText.color}/>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('+ ', '')}>
+      <View style={styles.toolbarItem}>
+        <Icon name="list-ul" size={15} color={styles.buttonText.color}/>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('1. ', '')}>
+      <View style={styles.toolbarItem}>
+        <Icon name="list-ol" size={15} color={styles.buttonText.color}/>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('```\n', '\n```')}>
+      <View style={styles.toolbarItem}>
+        <Icon name="code" size={15} color={styles.buttonText.color}/>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('[Link Text](https://www.google.com)', '')}>
+      <View style={styles.toolbarItem}>
+        <Icon name="link" size={15} color={styles.buttonText.color}/>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => onInsert('![Image](https://octodex.github.com/images/minion.png)', '')}>
+      <View style={styles.toolbarItem}>
+        <Icon name="image" size={15} color={styles.buttonText.color}/>
+      </View>
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={saveNotes} style={styles.toolbarItem}>
+      <Icon name="save" size={15} color={themeColors.Green}/>
+    </TouchableOpacity>
+  </View>
+);
+    useEffect(() => {
+        if (isEditingNotes) {
+        navigation.setOptions({
+          headerTitle: () => <MarkdownToolbar onInsert={insertMarkdownSyntax} />,
+        });
+        } else {
+            navigation.setOptions({
+          headerTitle: () => <Text style={markdownStyles.heading1}>{tableName}</Text>,
+            });
+        }
+    }, [isEditingNotes]);
+    useEffect(() => {
+      const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+        setKeyboardVisible(true);
+      });
+      const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+        setKeyboardVisible(false);
+      });
+
+      return () => {
+        keyboardDidShowListener.remove();
+        keyboardDidHideListener.remove();
+      };
+    }, []);
+    const handleSelectionChange = (event) => {
+      setSelection(event.nativeEvent.selection);
+    };
+
+    const insertMarkdownSyntax = (prefix, suffix) => {
+      const { start, end } = selection;
+      let wordStart = start;
+      let wordEnd = end;
+
+      // Find the start of the word or line
+      while (wordStart > 0 && notes[wordStart - 1] !== ' ' && notes[wordStart - 1] !== '\n') {
+        wordStart--;
+      }
+
+      // Find the end of the word or line
+      while (wordEnd < notes.length && notes[wordEnd] !== ' ' && notes[wordEnd] !== '\n') {
+        wordEnd++;
+      }
+
+      // Insert the Markdown syntax
+      const updatedText = notes.substring(0, wordStart) + prefix + notes.substring(wordStart, wordEnd) + suffix + notes.substring(wordEnd);
+      setNotes(updatedText);
+
+      // Update the selection to be after the inserted suffix
+      setSelection({ start: wordEnd + suffix.length, end: wordEnd + suffix.length });
+    };
 
     const addTodo = async () => {
         console.log('New todo:', newTodo);
@@ -168,8 +305,10 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
     }
     return (
         <GestureHandlerRootView>
-            <ScrollView >
+            <ScrollView>
             <View> 
+
+        <View style={styles.contentContainer}>
                     <Text style={styles.bodyCopy}>{dueDate}</Text>
                     <View style={styles.container}> 
                         <TextInput
@@ -180,15 +319,17 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                             onSubmitEditing={addTodo}
                         />
                         <TouchableOpacity onPress={addTodo} style={styles.button}>
-                            <Icon name="plus" size={20} color={styles.buttonText.color}/>
+                            <Icon name="plus" size={15} color={styles.buttonText.color}/>
                         </TouchableOpacity>
                     </View>
 
+                    </View>
                     <FlatList
                         scrollEnabled={false}
                         data={allTodos}
                         keyExtractor={item => item.id.toString()}
                         renderItem={({ item }) => (
+                            <View style={styles.contentContainer}>
                             <List.Item
                                 titleStyle={styles.list}
                                 title={item.name}
@@ -206,40 +347,41 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                                 )}
                                 onLongPress={() => showTodoContextMenu(item)}
                             />
+                            </View>
                         )}
                     />
                 <View>
                     <View>
                         {isEditingNotes ? (
+                                <View>
+                            <View style={styles.contentContainer}>
                             <TextInput
                                 multiline
                                 numberOfLines={50}
                                 onChangeText={text => setNotes(text)}
                                 value={notes}
-                                style={styles.textInput}
+                                style={styles.markdownInput}
+                                ref={inputRef}
+                                onSelectionChange={handleSelectionChange}
                             />
+                            </View>
+                            <KeyboardAvoidingView>
+                            </KeyboardAvoidingView>
+                            </View>
                         ) : (
                             <View>
-                                <TouchableOpacity onPress={startEditingNotes}>
+                                <TouchableOpacity onPress={startEditingNotes} style={styles.contentContainer}>
                                     <Text style={styles.buttonText}>
                                         Edit Notes
                                     </Text>
                                 </TouchableOpacity>
+                                <TouchableOpacity onPress={showNotesContextMenu} style={styles.contentContainer}>
+                                <Text style={styles.buttonText}>Delete</Text>
+                                </TouchableOpacity>
                                 <Markdown onLinkPress={onLinkPress}style={markdownStyles}>{notes}</Markdown>
                             </View>
                         )}
-
-                        {isEditingNotes && (
-                            <TouchableOpacity onPress={saveNotes}>
-                                <Text style={styles.buttonText}>
-                                    Save Notes
-                                </Text>
-                            </TouchableOpacity>
-                        )}
                     </View>
-                    <TouchableOpacity onPress={showNotesContextMenu}>
-                        <Text style={styles.buttonText}>Delete</Text>
-                    </TouchableOpacity>
                 </View>
                 </View>
             </ScrollView>

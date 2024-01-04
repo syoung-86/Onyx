@@ -166,6 +166,7 @@ const toggleCalendarVisibility = () => {
                     }}
                 />)}
 
+    </View>
                 <FlatList
                     data={allTodos}
                     keyExtractor={item => item.id.toString()}
@@ -189,7 +190,6 @@ const toggleCalendarVisibility = () => {
                         />
                     )}
                 />
-            </View>
         </GestureHandlerRootView>
     );
 };

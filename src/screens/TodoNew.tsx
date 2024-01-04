@@ -23,6 +23,7 @@ const TodoNew: React.FC<TodoNewProps> = ({onRefresh}) => {
                 await createTodoTable(newTodo, selected).then(
                     () => {onRefresh && onRefresh();
                     showSuccessToast("Todo Added Sucessfully!");
+                    setNewTodo('');
                     }
                 );
             } else {

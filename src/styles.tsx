@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
   },
   container : {
     flexDirection : 'row',
-    dispaly: 'flex',
+    display: 'flex',
     borderColor: themeColors.Base,
     textAlign: 'center',
     alignItems: 'center',
@@ -29,23 +29,37 @@ export const styles = StyleSheet.create({
     borderColor: themeColors.Base,
     opacity: 1,
   },
+  todoContainer: {
+  },
   contentContainer : {
     alignItems: 'center',
-    paddingTop: 50,
+    paddingTop: 10,
   },
   button : {
     padding : 10,
     color : themeColors.Text,
   },
+
+  strikethrough: {
+    fontSize : 15,
+    fontWeight : 'bold',
+    textDecorationLine : 'line-through',
+    color: themeColors.Mauve,
+  },
+  toolbarButton : {
+    fontSize : 15,
+    fontWeight : 'bold',
+    color: themeColors.Mauve,
+  },
   buttonText : {
     fontSize : 16,
     fontWeight : 'bold',
-    color: themeColors.Text,
+    color: themeColors.Mauve,
     backgroundColor: themeColors.Mantle,
     padding: 5,
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: themeColors.Mantle,
+    borderWidth: 2,
+    borderColor: themeColors.Base,
     flex: 0,
     alignItems: 'center',
     justifyContent: 'center',
@@ -58,6 +72,37 @@ export const styles = StyleSheet.create({
   input: {
     width: 200,
     height: 40,
+    borderColor: themeColors.Surface0,
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingLeft: 10,
+    paddingTop: 10,
+    color: themeColors.Text,
+    backgroundColor: themeColors.Base,
+  },
+
+  toolbarItem: {
+      padding: 5,
+alignItems: 'center', // Center content horizontally
+  justifyContent: 'center', // Center content vertically
+  width: 30, // Set a fixed width
+  height: 30, // Set a fixed height
+  },
+  markdownToolbar:{
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  padding: 15,
+  height: 80,
+  width: 300,
+  backgroundColor: themeColors.Base,
+  color: themeColors.Text,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: themeColors.Overlay0,
+  },
+  markdownInput: {
+    width: 400,
+    height: 200,
     borderColor: themeColors.Surface0,
     borderWidth: 1,
     marginBottom: 10,
@@ -254,7 +299,7 @@ export const markdownStyles =StyleSheet.create( {
 
   // Blockquotes
   blockquote: {
-    backgroundColor: themeColors.Crust,
+    backgroundColor: themeColors.Base,
     borderColor: '#CCC',
     borderLeftWidth: 4,
     marginLeft: 5,
