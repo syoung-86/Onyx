@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, TouchableOpacity, Alert, TextInput} from 'react-native';
 import {
     LongPressGestureHandler,
@@ -16,6 +16,8 @@ function PomodoroNew() {
     const [taskNames, setTaskNames] = useState<{id: number; name: string}[]>(
         [],
     );
+    const taskNameInputRef = useRef(null);
+    const goalInputRef = useRef(null);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -115,11 +117,6 @@ function PomodoroNew() {
         );
     };
 
-    // Function to handle the increase/decrease of the goal
-    const handleGoalChange = (amount: number) => {
-        const currentGoal = parseInt(goal, 10) || 0;
-        setGoal((currentGoal + amount).toString());
-    };
 
     return (
         <GestureHandlerRootView>
@@ -132,6 +129,8 @@ function PomodoroNew() {
                     placeholder="Task Name"
                     placeholderTextColor={styles.subtle.color}
                     onChangeText={text => setNewTaskName(text)}
+                    ref={taskNameInputRef}
+                    onSubmitEditing={() => goalInputRef.current.focus()}
                 />
                 <TextInput
                     style={styles.input}
@@ -140,15 +139,10 @@ function PomodoroNew() {
                     keyboardType="numeric"
                     value={goal}
                     onChangeText={text => setGoal(text)}
+                    ref={goalInputRef}
+                    returnKeyType="done"
+                    onSubmitEditing={addTaskName} 
                 />
-                <View>
-                    <TouchableOpacity onPress={() => handleGoalChange(1)}>
-                        <Text style={styles.bodyCopy}>+</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleGoalChange(-1)}>
-                        <Text style={styles.bodyCopy}>-</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
 
             <TouchableOpacity onPress={addTaskName}>

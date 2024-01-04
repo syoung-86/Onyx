@@ -18,6 +18,7 @@ import {
     updateRecord,
 } from '../database';
 import {Calendar} from 'react-native-calendars';
+import showSuccessToast from '../ToastHelper';
 
 function parseDateString() {
     const dateObject = new Date();
@@ -62,6 +63,7 @@ const toggleCalendarVisibility = () => {
                 // Change the selected value back to its original value
                 setSelected(originalSelected);
                 setNewTodo('');
+                showSuccessToast("Todo Added Successfully!");
             })
             .catch(error => console.error('Error creating todo:', error));
     };
@@ -132,6 +134,8 @@ const toggleCalendarVisibility = () => {
                         style={styles.input}
                         onChangeText={text => setNewTodo(text)}
                         value={newTodo}
+                        returnKeyType='done'
+                        onSubmitEditing={addTodo}
                     />
                     <TouchableOpacity onPress={addTodo}>
                     <Icon name="plus" size={20} color={styles.buttonText.color}/>

@@ -28,9 +28,8 @@ function TodoNavigator() {
         <Drawer.Navigator initialRouteName="Daily" 
         screenOptions={{headerTintColor: styles.bodyCopy.color}}
         >
-            <Drawer.Screen name="New">
-                {() => <TodoNew onRefresh={handleRefresh} />}
-            </Drawer.Screen>
+            <Drawer.Screen name="New"component={TodoNew}/>
+            
             <Drawer.Screen name="Daily" component={TodoToday} />
 
             {tableNames.map(tableName => (

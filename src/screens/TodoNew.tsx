@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Alert, Text, TouchableOpacity, View} from 'react-native';
 import {Calendar} from 'react-native-calendars';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {TextInput} from 'react-native-paper';
+import {TextInput, GestureHandlerRootView} from 'react-native-gesture-handler';
 import {createTodoTable} from '../database';
 import {RouteProp} from '@react-navigation/native';
-import { CalendarTheme, styles } from '../styles';
+import { CalendarTheme, styles, themeColors } from '../styles';
+import Toast, {BaseToast} from 'react-native-toast-message';
+import showSuccessToast from '../ToastHelper';
 
 interface TodoNewProps {
     onRefresh?: () => void;
@@ -15,11 +16,14 @@ interface TodoNewProps {
 const TodoNew: React.FC<TodoNewProps> = ({onRefresh}) => {
     const [newTodo, setNewTodo] = useState('');
     const [selected, setSelected] = useState('');
+
     const createTodo = async () => {
         try {
             if (newTodo.trim().length > 0) {
                 await createTodoTable(newTodo, selected).then(
-                    () => onRefresh && onRefresh(),
+                    () => {onRefresh && onRefresh();
+                    showSuccessToast("Todo Added Sucessfully!");
+                    }
                 );
             } else {
                 Alert.alert(
@@ -42,10 +46,10 @@ const toggleCalendarVisibility = () => {
         <View style={styles.contentContainer}>
             <View style={styles.container}>
                 <TextInput
-                    placeholder="Title*"
                     onChangeText={text => setNewTodo(text)}
                     style={styles.input}
-                    placeholderTextColor={styles.subtle.color}
+                    onSubmitEditing={createTodo}
+                    returnKeyType='done'
                 />
                 <TouchableOpacity onPress={createTodo} style={styles.button}>
                   <Icon name="plus" size={20} color={styles.buttonText.color}/>

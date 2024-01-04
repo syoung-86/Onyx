@@ -20,6 +20,7 @@ import {
 import Markdown from '@ronradtke/react-native-markdown-display';
 import { useNavigation } from '@react-navigation/native';
 import { Linking } from 'react-native';
+import showSuccessToast from '../ToastHelper';
 
 
 interface TodoScreenProps {
@@ -47,6 +48,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
             updatedTodos as { id: number; name: string; completed: boolean }[],
         );
         setNewTodo('');
+        showSuccessToast("Todo Added Successfully!");
     };
     const startEditingNotes = () => {
         setIsEditingNotes(true);
@@ -174,6 +176,8 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ tableName, onRefresh }) => {
                             style={styles.textInput}
                             onChangeText={text => setNewTodo(text)}
                             value={newTodo}
+                            returnKeyType='done'
+                            onSubmitEditing={addTodo}
                         />
                         <TouchableOpacity onPress={addTodo} style={styles.button}>
                             <Icon name="plus" size={20} color={styles.buttonText.color}/>
