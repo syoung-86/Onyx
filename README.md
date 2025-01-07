@@ -1,0 +1,5 @@
+Pomodoro/task tracker/todo notes/stats in React Native (Expo)
+![WhatsApp Image 2025-01-07 at 10 21 16](https://github.com/user-attachments/assets/b342ff15-f220-43d1-8b1d-5d7e54f1dc26)
+![WhatsApp Image 2025-01-07 at 10 21 15](https://github.com/user-attachments/assets/8d29f25e-3360-490a-9e3e-bbaace150836)
+![WhatsApp Image 2025-01-07 at 10 21 15 (1)](https://github.com/user-attachments/assets/92cf1125-0aec-478b-963a-97092172b7c2)
+![WhatsApp Image 2025-01-07 at 10 21 15 (2)](https://github.com/user-attachments/assets/74d6b94d-7b09-4cb0-b723-36f1eef040a5)
